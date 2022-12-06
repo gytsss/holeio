@@ -2,3 +2,4 @@
 #include "raylib.h"
 
 void runGame();
+
