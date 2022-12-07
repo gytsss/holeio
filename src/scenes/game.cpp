@@ -5,10 +5,10 @@
 
 static void init();
 static void input();
-static void checkCollision(Object& object);
-static void drawGame(Texture2D background);
+static void drawGame(Texture2D background, Font font, int timer);
 static void drawMenu(Font font);
 static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation);
+static bool checkCollision(Object& object);
 
 extern Hole hole;
 extern Object bonefires[maxBonefires];
@@ -28,7 +28,9 @@ void runGame()
 
 	Font font = LoadFont("res/font.ttf");
 
-	
+	int timer = 600;
+	bool isGameOver = false;
+	int currentObjects = 0;
 
 	palmtree.width = static_cast<int>(palmtree.width * 0.2f);
 	palmtree.height = static_cast<int>(palmtree.height * 0.2f);
@@ -40,19 +42,21 @@ void runGame()
 	for (int i = 0; i < maxBonefires; i++)
 	{
 		createObject(bonefires[i], 10, bonefire);
+		currentObjects++;
 	}
 
 	for (int i = 0; i < maxPalmtrees; i++)
 	{
-		createObject(palmtrees[i], 15, palmtree);
+		createObject(palmtrees[i], 20, palmtree);
+		currentObjects++;
 	}
 
 	for (int i = 0; i < maxTrees; i++)
 	{
-		createObject(trees[i], 20, tree);
+		createObject(trees[i], 40, tree);
+		currentObjects++;
 	}
 
-	bool isGameOver = false;
 
 	while (!WindowShouldClose() && !isGameOver)
 	{
@@ -61,18 +65,48 @@ void runGame()
 
 		for (int i = 0; i < maxBonefires; i++)
 		{
-			checkCollision(bonefires[i]);
+			if (checkCollision(bonefires[i]))
+			{
+				hole.radius += 1;
+
+				hole.speed.x--;
+				hole.speed.y--;
+
+				bonefires[i].isActive = false;
+			}
 		}
 
 		for (int i = 0; i < maxPalmtrees; i++)
 		{
-			checkCollision(palmtrees[i]);
+			if (checkCollision(palmtrees[i]))
+			{
+				hole.radius += 2;
+
+				hole.speed.x--;
+				hole.speed.y--;
+
+				palmtrees[i].isActive = false;
+			}
 		}
 
 		for (int i = 0; i < maxTrees; i++)
 		{
-			checkCollision(trees[i]);
+			if (checkCollision(trees[i]))
+			{
+				hole.radius += 5;
+
+				hole.speed.x--;
+				hole.speed.y--;
+
+				trees[i].isActive = false;
+			}
 		}
+
+		if (timer <= 0 && currentObjects > 0)
+		{
+			currentScene = Menu;
+		}
+
 
 		switch (currentScene)
 		{
@@ -82,8 +116,9 @@ void runGame()
 
 			break;
 		case Play:
+			timer--;
+			drawGame(sand, font, timer);
 
-			drawGame(sand);
 
 			break;
 
@@ -133,32 +168,22 @@ void input()
 		hole.pos.x += 1 * hole.speed.x * GetFrameTime();
 }
 
-void checkCollision(Object& object)
+bool checkCollision(Object& object)
 {
 	if (CheckCollisionCircles(hole.pos, hole.radius * 0.75f, object.pos, object.requiredRad) && object.isActive && hole.radius >= object.requiredRad)
 	{
-		switch (static_cast<int>(object.requiredRad))
-		{
-		case 10:
-			hole.radius += 1;
-			break;
-		case 15:
-			hole.radius += 2;
-			break;
-		case 20:
-			hole.radius += 5;
-			break;
-		default:
-			break;
-		}
 
-		hole.speed.x--;
-		hole.speed.y--;
-		object.isActive = false;
+
+		return true;
+
+	}
+	else
+	{
+		return false;
 	}
 }
 
-void drawGame(Texture2D background)
+void drawGame(Texture2D background, Font font, int timer)
 {
 	BeginDrawing();
 	ClearBackground(DARKGRAY);
@@ -169,7 +194,10 @@ void drawGame(Texture2D background)
 
 	drawObjects();
 
-	DrawText(TextFormat("Size: %i", static_cast<int>(hole.radius)), 500, 10, 30, hole.color);
+	DrawTextEx(font, TextFormat("Size: %i", static_cast<int>(hole.radius)), Vector2{ 500, 10 }, 30, 0, RED);
+
+	DrawTextEx(font, TextFormat("Timer: %i ", timer / 60), Vector2{ 200, 10 }, 30, 0, RED);
+
 	DrawFPS(10, 10);
 	EndDrawing();
 }
@@ -196,11 +224,11 @@ void drawMenu(Font font)
 	DrawTextPro(font, "Play", Vector2{ GetScreenWidth() / 2 - playLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, playRotation, static_cast<float>(font.baseSize), 0, GREEN);
 
 	DrawTextPro(font, "Credits", Vector2{ GetScreenWidth() / 2 - creditsLength / 2, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, creditsRotation, static_cast<float>(font.baseSize), 0, GREEN);
-	
+
 	DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, exitRotation, static_cast<float>(font.baseSize), 0, GREEN);
 
-	
-	
+
+
 	EndDrawing();
 }
 

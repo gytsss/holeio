@@ -1,7 +1,7 @@
 #pragma once
 #include "hole.h"
 
-const int maxBonefires = 7;
+const int maxBonefires = 15;
 const int maxPalmtrees = 20;
 const int maxTrees = 5;
 
