@@ -1,9 +1,9 @@
 #pragma once
 #include "hole.h"
 
+const int maxBonefires = 7;
 const int maxPalmtrees = 20;
 const int maxTrees = 5;
-const int maxBonefires = 5;
 
 struct Object
 {
@@ -15,3 +15,4 @@ struct Object
 
 void createObject(Object& object, float requiredRad, Texture2D texture);
 void drawObject(Object object);
+void drawObjects();

@@ -1,5 +1,8 @@
 #include "objects.h"
 
+Object bonefires[maxBonefires];
+Object palmtrees[maxPalmtrees];
+Object trees[maxTrees];
 
 void createObject(Object& object, float requiredRad, Texture2D texture)
 {
@@ -20,5 +23,23 @@ void drawObject(Object object)
 			0.0f, WHITE);
 
 		DrawCircleLines(static_cast<int>(object.pos.x), static_cast<int>(object.pos.y), object.requiredRad, RED);
+	}
+}
+
+void drawObjects()
+{
+	for (int i = 0; i < maxBonefires; i++)
+	{
+		drawObject(bonefires[i]);
+	}
+
+	for (int i = 0; i < maxPalmtrees; i++)
+	{
+		drawObject(palmtrees[i]);
+	}
+
+	for (int i = 0; i < maxTrees; i++)
+	{
+		drawObject(trees[i]);
 	}
 }

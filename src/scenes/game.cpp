@@ -6,9 +6,13 @@
 static void init();
 static void input();
 static void checkCollision(Object& object);
+static void drawGame(Texture2D background);
+static void drawMenu(Font font);
 
 extern Hole hole;
-
+extern Object bonefires[maxBonefires];
+extern Object palmtrees[maxPalmtrees];
+extern Object trees[maxTrees];
 
 
 void runGame()
@@ -19,18 +23,17 @@ void runGame()
 	Texture2D tree = LoadTexture("res/tree.png");
 	Texture2D bonefire = LoadTexture("res/bonefire.png");
 	Texture2D sand = LoadTexture("res/sand.png");
-	
 
+	Font font = LoadFont("res/font.ttf");
+
+	Scene currentScene = Menu;
 
 	palmtree.width = static_cast<int>(palmtree.width * 0.2f);
 	palmtree.height = static_cast<int>(palmtree.height * 0.2f);
 
 
-	createHole(hole, BLUE);
 
-	Object bonefires[maxBonefires];
-	Object palmtrees[maxPalmtrees];
-	Object trees[maxTrees];
+	createHole(hole, BLUE);
 
 	for (int i = 0; i < maxBonefires; i++)
 	{
@@ -47,9 +50,9 @@ void runGame()
 		createObject(trees[i], 20, tree);
 	}
 
+	bool isGameOver = false;
 
-
-	while (!WindowShouldClose())
+	while (!WindowShouldClose() && !isGameOver)
 	{
 
 		input();
@@ -69,32 +72,27 @@ void runGame()
 			checkCollision(trees[i]);
 		}
 
-
-		BeginDrawing();
-		ClearBackground(DARKGRAY);
-
-		DrawTexture(sand, 0, 0, WHITE);
-
-		drawHole();
-
-		for (int i = 0; i < maxBonefires; i++)
+		switch (currentScene)
 		{
-			drawObject(bonefires[i]);
+		case Menu:
+
+			drawMenu(font);
+
+			break;
+		case Play:
+
+			drawGame(sand);
+
+			break;
+		case Exit:
+			isGameOver = true;
+
+			break;
+		default:
+			break;
 		}
 
-		for (int i = 0; i < maxPalmtrees; i++)
-		{
-			drawObject(palmtrees[i]);
-		}
 
-		for (int i = 0; i < maxTrees; i++)
-		{
-			drawObject(trees[i]);
-		}
-
-		DrawText(TextFormat("Size: %i", static_cast<int>(hole.radius)), 500, 10, 30, hole.color);
-		DrawFPS(10, 10);
-		EndDrawing();
 
 	}
 
@@ -147,9 +145,42 @@ void checkCollision(Object& object)
 		default:
 			break;
 		}
-		
+
 		hole.speed.x--;
 		hole.speed.y--;
 		object.isActive = false;
 	}
+}
+
+void drawGame(Texture2D background)
+{
+	BeginDrawing();
+	ClearBackground(DARKGRAY);
+
+	DrawTexture(background, 0, 0, WHITE);
+
+	drawHole();
+
+	drawObjects();
+
+	DrawText(TextFormat("Size: %i", static_cast<int>(hole.radius)), 500, 10, 30, hole.color);
+	DrawFPS(10, 10);
+	EndDrawing();
+}
+
+void drawMenu(Font font)
+{
+	float titleLength = MeasureTextEx(font, "Hole.io", static_cast<float>(font.baseSize), 20).x;
+	float playLength = MeasureTextEx(font, "Play", static_cast<float>(font.baseSize), 0).x;
+
+	BeginDrawing();
+	ClearBackground(BLACK);
+
+	DrawTextPro(font, "Hole.io", Vector2{ GetScreenWidth() / 2 - titleLength / 2, static_cast<float>(GetScreenHeight() / 4.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 20, YELLOW);
+
+	DrawTextPro(font, "Play", Vector2{ GetScreenWidth() / 2 - playLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, GREEN);
+
+	
+	
+	EndDrawing();
 }
