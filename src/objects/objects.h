@@ -2,6 +2,7 @@
 #include "hole.h"
 
 const int maxPalmtrees = 20;
+const int maxTrees = 5;
 
 struct Object
 {

@@ -16,6 +16,8 @@ void runGame()
 	init();
 
 	Texture2D palmtree = LoadTexture("res/palmtree.png");
+	Texture2D tree = LoadTexture("res/tree2.png");
+
 
 	palmtree.width = static_cast<int>(palmtree.width * 0.2f);
 	palmtree.height = static_cast<int>(palmtree.height * 0.2f);
@@ -24,11 +26,17 @@ void runGame()
 	createHole(hole, BLUE);
 
 	Object palmtrees[maxPalmtrees];
-	
+	Object trees[maxTrees];
+
 
 	for (int i = 0; i < maxPalmtrees; i++)
 	{
 		createObject(palmtrees[i], 10, palmtree);
+	}
+
+	for (int i = 0; i < maxTrees; i++)
+	{
+		createObject(trees[i], 20, tree);
 	}
 
 
@@ -43,6 +51,11 @@ void runGame()
 			checkCollision(palmtrees[i]);
 		}
 
+		for (int i = 0; i < maxTrees; i++)
+		{
+			checkCollision(trees[i]);
+		}
+
 		BeginDrawing();
 		ClearBackground(DARKGREEN);
 
@@ -51,6 +64,11 @@ void runGame()
 		for (int i = 0; i < maxPalmtrees; i++)
 		{
 			drawObject(palmtrees[i]);
+		}
+
+		for (int i = 0; i < maxTrees; i++)
+		{
+			drawObject(trees[i]);
 		}
 
 
@@ -92,7 +110,7 @@ void input()
 
 void checkCollision(Object& object)
 {
-	if (CheckCollisionCircles(hole.pos, hole.radius, object.pos, object.requiredRad) && object.isActive)
+	if (CheckCollisionCircles(hole.pos, hole.radius, object.pos, object.requiredRad) && object.isActive && hole.radius >= object.requiredRad)
 	{
 		hole.radius += 1;
 		hole.speed.x--;
