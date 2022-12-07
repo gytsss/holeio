@@ -3,6 +3,7 @@
 
 const int maxPalmtrees = 20;
 const int maxTrees = 5;
+const int maxBonefires = 5;
 
 struct Object
 {
