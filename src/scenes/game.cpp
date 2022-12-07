@@ -5,15 +5,18 @@
 
 static void init();
 static void input();
-static void drawGame(Texture2D background, Font font, int timer);
-static void drawMenu(Font font);
+static void drawGame(Texture2D background, Font font, int timer, Texture2D cursor);
+static void drawMenu(Font font, Texture2D cursor);
 static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation);
-static bool checkCollision(Object& object);
+static void checkCollisions();
+
+static bool collisionHoleObject(Object& object);
 
 extern Hole hole;
 extern Object bonefires[maxBonefires];
 extern Object palmtrees[maxPalmtrees];
 extern Object trees[maxTrees];
+
 
 Scene currentScene = Menu;
 
@@ -25,16 +28,16 @@ void runGame()
 	Texture2D tree = LoadTexture("res/tree.png");
 	Texture2D bonefire = LoadTexture("res/bonefire.png");
 	Texture2D sand = LoadTexture("res/sand.png");
+	Texture2D cursor = LoadTexture("res/cursor.png");
 
 	Font font = LoadFont("res/font.ttf");
 
-	int timer = 600;
+	int timer = 1200;
 	bool isGameOver = false;
 	int currentObjects = 0;
 
 	palmtree.width = static_cast<int>(palmtree.width * 0.2f);
 	palmtree.height = static_cast<int>(palmtree.height * 0.2f);
-
 
 
 	createHole(hole, BLUE);
@@ -58,49 +61,14 @@ void runGame()
 	}
 
 
+	
 	while (!WindowShouldClose() && !isGameOver)
 	{
 
 		input();
 
-		for (int i = 0; i < maxBonefires; i++)
-		{
-			if (checkCollision(bonefires[i]))
-			{
-				hole.radius += 1;
 
-				hole.speed.x--;
-				hole.speed.y--;
-
-				bonefires[i].isActive = false;
-			}
-		}
-
-		for (int i = 0; i < maxPalmtrees; i++)
-		{
-			if (checkCollision(palmtrees[i]))
-			{
-				hole.radius += 2;
-
-				hole.speed.x--;
-				hole.speed.y--;
-
-				palmtrees[i].isActive = false;
-			}
-		}
-
-		for (int i = 0; i < maxTrees; i++)
-		{
-			if (checkCollision(trees[i]))
-			{
-				hole.radius += 5;
-
-				hole.speed.x--;
-				hole.speed.y--;
-
-				trees[i].isActive = false;
-			}
-		}
+		checkCollisions();
 
 		if (timer <= 0 && currentObjects > 0)
 		{
@@ -112,16 +80,17 @@ void runGame()
 		{
 		case Menu:
 
-			drawMenu(font);
+			drawMenu(font, cursor);
+			
 
 			break;
 		case Play:
 			timer--;
-			drawGame(sand, font, timer);
 
+			drawGame(sand, font, timer, cursor);
+			
 
 			break;
-
 		case Credits:
 
 			break;
@@ -132,7 +101,6 @@ void runGame()
 		default:
 			break;
 		}
-
 
 
 	}
@@ -147,6 +115,8 @@ void init()
 
 	InitWindow(screenWidth, screenHeight, "Hole.io");
 	SetWindowState(FLAG_VSYNC_HINT);
+	HideCursor();
+
 #pragma warning( push )
 #pragma warning( disable : 4244)
 	srand(time(NULL));
@@ -168,22 +138,15 @@ void input()
 		hole.pos.x += 1 * hole.speed.x * GetFrameTime();
 }
 
-bool checkCollision(Object& object)
+bool collisionHoleObject(Object& object)
 {
 	if (CheckCollisionCircles(hole.pos, hole.radius * 0.75f, object.pos, object.requiredRad) && object.isActive && hole.radius >= object.requiredRad)
-	{
-
-
 		return true;
-
-	}
 	else
-	{
 		return false;
-	}
 }
 
-void drawGame(Texture2D background, Font font, int timer)
+void drawGame(Texture2D background, Font font, int timer, Texture2D cursor)
 {
 	BeginDrawing();
 	ClearBackground(DARKGRAY);
@@ -194,15 +157,17 @@ void drawGame(Texture2D background, Font font, int timer)
 
 	drawObjects();
 
-	DrawTextEx(font, TextFormat("Size: %i", static_cast<int>(hole.radius)), Vector2{ 500, 10 }, 30, 0, RED);
+	DrawTextEx(font, TextFormat("Score: %i", static_cast<int>(hole.radius)), Vector2{ 500, 10 }, 30, 0, RED);
 
 	DrawTextEx(font, TextFormat("Timer: %i ", timer / 60), Vector2{ 200, 10 }, 30, 0, RED);
+
+	DrawTexture(cursor, static_cast<int>(GetMousePosition().x), static_cast<int>(GetMousePosition().y), WHITE);
 
 	DrawFPS(10, 10);
 	EndDrawing();
 }
 
-void drawMenu(Font font)
+void drawMenu(Font font, Texture2D cursor)
 {
 	float titleLength = MeasureTextEx(font, "Hole.io", static_cast<float>(font.baseSize), 20).x;
 	float playLength = MeasureTextEx(font, "Play", static_cast<float>(font.baseSize), 0).x;
@@ -214,10 +179,11 @@ void drawMenu(Font font)
 	float creditsRotation = 0;
 	float exitRotation = 0;
 
-	BeginDrawing();
-	ClearBackground(BLACK);
-
 	menuCollisions(titleRotation, playRotation, creditsRotation, exitRotation);
+
+	BeginDrawing();
+	ClearBackground(DARKGRAY);
+
 
 	DrawTextPro(font, "Hole.io", Vector2{ GetScreenWidth() / 2 - titleLength / 2, static_cast<float>(GetScreenHeight() / 4.5f) }, Vector2{ 0, 0 }, titleRotation, static_cast<float>(font.baseSize), 20, YELLOW);
 
@@ -227,7 +193,7 @@ void drawMenu(Font font)
 
 	DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, exitRotation, static_cast<float>(font.baseSize), 0, GREEN);
 
-
+	DrawTexture(cursor, static_cast<int>(GetMousePosition().x), static_cast<int>(GetMousePosition().y), WHITE);
 
 	EndDrawing();
 }
@@ -270,5 +236,47 @@ void menuCollisions(float& titleRotation, float& playRotation, float& creditsRot
 
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 			currentScene = Exit;
+	}
+}
+
+void checkCollisions()
+{
+	for (int i = 0; i < maxBonefires; i++)
+	{
+		if (collisionHoleObject(bonefires[i]))
+		{
+			hole.radius += 1;
+
+			hole.speed.x--;
+			hole.speed.y--;
+
+			bonefires[i].isActive = false;
+		}
+	}
+
+	for (int i = 0; i < maxPalmtrees; i++)
+	{
+		if (collisionHoleObject(palmtrees[i]))
+		{
+			hole.radius += 2;
+
+			hole.speed.x--;
+			hole.speed.y--;
+
+			palmtrees[i].isActive = false;
+		}
+	}
+
+	for (int i = 0; i < maxTrees; i++)
+	{
+		if (collisionHoleObject(trees[i]))
+		{
+			hole.radius += 5;
+
+			hole.speed.x--;
+			hole.speed.y--;
+
+			trees[i].isActive = false;
+		}
 	}
 }
