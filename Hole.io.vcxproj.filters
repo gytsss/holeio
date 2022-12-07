@@ -28,12 +28,18 @@
     <ClCompile Include="src\objects\hole.cpp">
       <Filter>objects</Filter>
     </ClCompile>
+    <ClCompile Include="src\objects\objects.cpp">
+      <Filter>objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\scenes\game.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\objects\hole.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects\objects.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
