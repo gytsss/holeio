@@ -18,6 +18,8 @@ void runGame()
 	Texture2D palmtree = LoadTexture("res/palmtree.png");
 	Texture2D tree = LoadTexture("res/tree.png");
 	Texture2D bonefire = LoadTexture("res/bonefire.png");
+	Texture2D sand = LoadTexture("res/sand.png");
+	
 
 
 	palmtree.width = static_cast<int>(palmtree.width * 0.2f);
@@ -69,7 +71,9 @@ void runGame()
 
 
 		BeginDrawing();
-		ClearBackground(DARKGREEN);
+		ClearBackground(DARKGRAY);
+
+		DrawTexture(sand, 0, 0, WHITE);
 
 		drawHole();
 
@@ -100,7 +104,7 @@ void runGame()
 void init()
 {
 	const int screenWidth = 1280;
-	const int screenHeight = 1000;
+	const int screenHeight = 720;
 
 	InitWindow(screenWidth, screenHeight, "Hole.io");
 	SetWindowState(FLAG_VSYNC_HINT);
