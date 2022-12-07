@@ -5,6 +5,7 @@ enum Scene
 {
 	Menu,
 	Play,
+	Credits,
 	Exit
 };
 
