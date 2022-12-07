@@ -16,7 +16,7 @@ void runGame()
 	init();
 
 	Texture2D palmtree = LoadTexture("res/palmtree.png");
-	Texture2D tree = LoadTexture("res/tree2.png");
+	Texture2D tree = LoadTexture("res/tree.png");
 
 
 	palmtree.width = static_cast<int>(palmtree.width * 0.2f);
@@ -71,7 +71,7 @@ void runGame()
 			drawObject(trees[i]);
 		}
 
-
+		DrawText(TextFormat("Size: %i", static_cast<int>(hole.radius)), 500, 10, 30, hole.color);
 		DrawFPS(10, 10);
 		EndDrawing();
 
@@ -112,7 +112,18 @@ void checkCollision(Object& object)
 {
 	if (CheckCollisionCircles(hole.pos, hole.radius, object.pos, object.requiredRad) && object.isActive && hole.radius >= object.requiredRad)
 	{
-		hole.radius += 1;
+		switch (static_cast<int>(object.requiredRad))
+		{
+		case 10:
+			hole.radius += 1;
+			break;
+		case 20:
+			hole.radius += 5;
+			break;
+		default:
+			break;
+		}
+		
 		hole.speed.x--;
 		hole.speed.y--;
 		object.isActive = false;
