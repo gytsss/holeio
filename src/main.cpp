@@ -1,8 +1,9 @@
 #include "scenes/game.h"
 
-int main()
-{
-	runGame();
 
-	return 0;
-}
+	int main()
+	{
+		tob::runGame();
+
+		return 0;
+	}

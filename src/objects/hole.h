@@ -3,13 +3,17 @@
 #include <iostream>
 #include "ctime"
 
-struct Hole
+namespace tob
 {
-	Vector2 pos;
-	Vector2 speed;
-	float radius;
-	Color color;
-};
 
-void createHole(Hole& hole, Color color);
-void drawHole();
+	struct Hole
+	{
+		Vector2 pos;
+		Vector2 speed;
+		float radius;
+		Color color;
+	};
+
+	void createHole(Hole& hole, Color color);
+	void drawHole();
+}

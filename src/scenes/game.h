@@ -1,14 +1,18 @@
 #pragma once
 #include "raylib.h"
 
-enum Scene
+namespace tob
 {
-	Menu,
-	Play,
-	Credits,
-	Exit
-};
 
-void runGame();
+	enum Scene
+	{
+		Menu,
+		Play,
+		Credits,
+		Exit
+	};
 
+	void runGame();
+
+}
 
