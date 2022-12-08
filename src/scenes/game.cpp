@@ -15,8 +15,10 @@ namespace tob
 
 	static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation);
 	static void creditsCollisions(float& rotation);
-	static void checkCollisions();
+	static void checkCollisions(int& currentObjects);
 	static bool collisionHoleObject(Object& object);
+
+	static void checkWinOrLose(int& timer, int currentObjects);
 
 	extern Hole hole;
 	extern Object bonefires[maxBonefires];
@@ -38,7 +40,9 @@ namespace tob
 
 		Font font = LoadFont("res/font.ttf");
 
-		int timer = 1200;
+		
+		
+		int timer = 12000;
 		bool isGameOver = false;
 		int currentObjects = 0;
 
@@ -67,6 +71,19 @@ namespace tob
 		}
 
 
+		for (int i = 0; i < maxBonefires; i++)
+		{
+			for (int j = 0; j < maxPalmtrees; j++)
+			{
+				while (fabs(bonefires[i].pos.x - palmtrees[j].pos.x) < 50 || fabs(bonefires[i].pos.y - palmtrees[j].pos.y) < 50)
+				{
+					createObject(bonefires[i], 10, bonefire);
+				}
+			}
+
+		}
+
+
 
 		while (!WindowShouldClose() && !isGameOver)
 		{
@@ -74,14 +91,10 @@ namespace tob
 			input();
 
 
-			checkCollisions();
+			checkCollisions(currentObjects);
 
-			if (timer <= 0 && currentObjects > 0 && currentScene == Play)
-			{
-				currentScene = Menu;
-				timer = 1200;
-			}
-
+			checkWinOrLose(timer, currentObjects);
+			
 
 			switch (currentScene)
 			{
@@ -248,7 +261,7 @@ namespace tob
 		}
 	}
 
-	void checkCollisions()
+	void checkCollisions(int& currentObjects)
 	{
 		for (int i = 0; i < maxBonefires; i++)
 		{
@@ -260,6 +273,8 @@ namespace tob
 				hole.speed.y--;
 
 				bonefires[i].isActive = false;
+
+				currentObjects--;
 			}
 		}
 
@@ -273,6 +288,8 @@ namespace tob
 				hole.speed.y--;
 
 				palmtrees[i].isActive = false;
+
+				currentObjects--;
 			}
 		}
 
@@ -286,6 +303,8 @@ namespace tob
 				hole.speed.y--;
 
 				trees[i].isActive = false;
+
+				currentObjects--;
 			}
 		}
 	}
@@ -349,4 +368,19 @@ namespace tob
 				currentScene = Menu;
 		}
 	}
+
+	void checkWinOrLose(int& timer, int currentObjects)
+	{
+		if (timer <= 0 && currentObjects > 0 && currentScene == Play)
+		{
+			currentScene = Menu;
+			timer = 1200;
+		}
+		else if (currentObjects == 0 && timer > 0)
+		{
+			currentScene = Menu;
+			timer = 1200;
+		}
+	}
+
 }
