@@ -7,6 +7,7 @@ namespace tob
 	const int maxBonefires = 15;
 	const int maxPalmtrees = 10;
 	const int maxTrees = 5;
+	const int maxObjects = maxBonefires + maxPalmtrees + maxTrees;
 
 	struct Object
 	{

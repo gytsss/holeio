@@ -17,6 +17,7 @@ namespace tob
 	static void creditsCollisions(float& rotation);
 	static void checkCollisions(int& currentObjects);
 	static bool collisionHoleObject(Object& object);
+	static void checkObjectsOverlap(Texture2D bonefire, Texture2D palmtree, Texture2D tree);
 
 	static void checkWinOrLose(int& timer, int currentObjects);
 
@@ -40,8 +41,8 @@ namespace tob
 
 		Font font = LoadFont("res/font.ttf");
 
-		
-		
+
+
 		int timer = 12000;
 		bool isGameOver = false;
 		int currentObjects = 0;
@@ -71,17 +72,7 @@ namespace tob
 		}
 
 
-		for (int i = 0; i < maxBonefires; i++)
-		{
-			for (int j = 0; j < maxPalmtrees; j++)
-			{
-				while (fabs(bonefires[i].pos.x - palmtrees[j].pos.x) < 50 || fabs(bonefires[i].pos.y - palmtrees[j].pos.y) < 50)
-				{
-					createObject(bonefires[i], 10, bonefire);
-				}
-			}
-
-		}
+		
 
 
 
@@ -93,8 +84,11 @@ namespace tob
 
 			checkCollisions(currentObjects);
 
+			checkObjectsOverlap(bonefire, palmtree, tree);
+
 			checkWinOrLose(timer, currentObjects);
-			
+
+
 
 			switch (currentScene)
 			{
@@ -179,7 +173,7 @@ namespace tob
 
 		drawObjects();
 
-		DrawTextEx(font, TextFormat("Score: %i", static_cast<int>(hole.radius)), Vector2{ 500, 10 }, 30, 0, RED);
+		DrawTextEx(font, TextFormat("Score: %i", static_cast<int>(hole.radius - 10)), Vector2{ 500, 10 }, 30, 0, RED);
 
 		DrawTextEx(font, TextFormat("Timer: %i ", timer / 60), Vector2{ 200, 10 }, 30, 0, RED);
 
@@ -380,6 +374,73 @@ namespace tob
 		{
 			currentScene = Menu;
 			timer = 1200;
+		}
+	}
+
+	void checkObjectsOverlap(Texture2D bonefire, Texture2D palmtree, Texture2D tree)
+	{
+		for (int i = 0; i < maxBonefires; i++)
+		{
+			//Bonefires overlap
+			for (int j = 0; j < maxBonefires; j++)
+			{
+				for (int k = 0; k < maxPalmtrees; k++)
+				{
+					while (fabs(bonefires[j].pos.x - palmtrees[k].pos.x) < 50 && fabs(bonefires[j].pos.y - palmtrees[k].pos.y) < 50)
+					{
+						createObject(bonefires[j], 10, bonefire);
+					}
+				}
+
+				for (int k = j + 1; k < maxBonefires; k++)
+				{
+					while (fabs(bonefires[j].pos.x - bonefires[k].pos.x) < 50 && fabs(bonefires[j].pos.y - bonefires[k].pos.y) < 50)
+					{
+						createObject(bonefires[j], 10, bonefire);
+					}
+				}
+
+				for (int k = 0; k < maxBonefires; k++)
+				{
+					while (fabs(bonefires[j].pos.x - trees[k].pos.x) < 75 && fabs(bonefires[j].pos.y - trees[k].pos.y) < 75)
+					{
+						createObject(bonefires[j], 10, bonefire);
+					}
+				}
+			}
+
+			//Palmtrees overlap
+			for (int j = 0; j < maxPalmtrees; j++)
+			{
+				for (int k = j + 1; k < maxPalmtrees; k++)
+				{
+					while (fabs(palmtrees[j].pos.x - palmtrees[k].pos.x) < 50 && fabs(palmtrees[j].pos.y - palmtrees[k].pos.y) < 50)
+					{
+						createObject(palmtrees[j], 20, palmtree);
+					}
+				}
+
+				for (int k = 0; k < maxTrees; k++)
+				{
+					while (fabs(palmtrees[j].pos.x - trees[k].pos.x) < 75 && fabs(palmtrees[j].pos.y - trees[k].pos.y) < 75)
+					{
+						createObject(palmtrees[j], 20, palmtree);
+					}
+				}
+			}
+			
+			//Trees overlap
+			for (int j = 0; j < maxTrees; j++)
+			{
+				for (int k = j + 1; k < maxTrees; k++)
+				{
+					while (fabs(trees[j].pos.x - trees[k].pos.x) < 100 && fabs(trees[j].pos.y - trees[k].pos.y) < 100)
+					{
+						createObject(trees[j], 40, tree);
+					}
+				}
+
+			}
 		}
 	}
 
