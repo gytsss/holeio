@@ -8,6 +8,7 @@ namespace tob
 
 	static void init();
 	static void input();
+	static void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree);
 
 	static void drawGame(Texture2D background, Font font, int timer, Texture2D pause);
 	static void drawMenu(Font font);
@@ -61,25 +62,7 @@ namespace tob
 
 		createHole(hole, BLUE);
 
-		for (int i = 0; i < maxBonefires; i++)
-		{
-			createObject(bonefires[i], 10, bonefire);
-			currentObjects++;
-		}
-
-		for (int i = 0; i < maxPalmtrees; i++)
-		{
-			createObject(palmtrees[i], 20, palmtree);
-			currentObjects++;
-		}
-
-		for (int i = 0; i < maxTrees; i++)
-		{
-			createObject(trees[i], 40, tree);
-			currentObjects++;
-		}
-
-
+		createAllObjects(currentObjects, bonefire, palmtree, tree);
 
 
 
@@ -109,6 +92,8 @@ namespace tob
 			switch (currentScene)
 			{
 			case Menu:
+
+				reset(currentObjects, timer, bonefire, palmtree, tree);
 
 				drawMenu(font);
 
@@ -188,6 +173,17 @@ namespace tob
 
 		if (IsKeyDown(KEY_D) && hole.pos.x < GetScreenWidth())
 			hole.pos.x += 1 * hole.speed.x * GetFrameTime();
+	}
+
+	void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree)
+	{
+		currentObjects = 0;
+		timer = 0;
+
+		createHole(hole, BLUE);
+
+		createAllObjects(currentObjects, bonefire, palmtree, tree);
+
 	}
 
 	bool collisionHoleObject(Object& object)
@@ -565,7 +561,7 @@ namespace tob
 
 		if (CheckCollisionPointRec(GetMousePosition(), playBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 			pause = false;
-		
+
 		if (CheckCollisionPointRec(GetMousePosition(), exitBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 		{
 			pause = false;
@@ -581,4 +577,6 @@ namespace tob
 		DrawTexture(cursor, static_cast<int>(GetMousePosition().x - 15), static_cast<int>(GetMousePosition().y - 15), WHITE);
 
 	}
+
+
 }

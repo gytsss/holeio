@@ -12,7 +12,7 @@ namespace tob
 	{
 		do
 		{
-			object.pos = { static_cast<float>(rand() % (GetScreenWidth() - 100) + 50), static_cast<float>(rand() % (GetScreenHeight() - 100) + 50) };
+			object.pos = { static_cast<float>(rand() % (GetScreenWidth() - 150) + 50), static_cast<float>(rand() % (GetScreenHeight() - 150) + 50) };
 
 		} while (fabs(object.pos.x - GetScreenWidth() / 2) < 50 || fabs(object.pos.y - GetScreenHeight() / 2) < 50);
 		
@@ -52,5 +52,27 @@ namespace tob
 		{
 			drawObject(trees[i]);
 		}
+	}
+
+	void createAllObjects(int& currentObjects, Texture2D bonefire, Texture2D palmtree, Texture2D tree)
+	{
+		for (int i = 0; i < maxBonefires; i++)
+		{
+			createObject(bonefires[i], 10, bonefire);
+			currentObjects++;
+		}
+
+		for (int i = 0; i < maxPalmtrees; i++)
+		{
+			createObject(palmtrees[i], 20, palmtree);
+			currentObjects++;
+		}
+
+		for (int i = 0; i < maxTrees; i++)
+		{
+			createObject(trees[i], 40, tree);
+			currentObjects++;
+		}
+
 	}
 }
