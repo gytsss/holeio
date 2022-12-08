@@ -12,9 +12,12 @@ namespace tob
 	static void drawGame(Texture2D background, Font font, int timer, Texture2D cursor);
 	static void drawMenu(Font font, Texture2D cursor);
 	static void drawCredits(Font font, Texture2D cursor);
+	static void drawDifficultySelector(Font font, Texture2D cursor, int& timer);
 
 	static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation);
 	static void creditsCollisions(float& rotation);
+	static void difficultyCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, int& timer);
+
 	static void checkCollisions(int& currentObjects);
 	static bool collisionHoleObject(Object& object);
 	static void checkObjectsOverlap(Texture2D bonefire, Texture2D palmtree, Texture2D tree);
@@ -75,7 +78,6 @@ namespace tob
 		
 
 
-
 		while (!WindowShouldClose() && !isGameOver)
 		{
 
@@ -105,12 +107,18 @@ namespace tob
 
 
 				break;
+			case Difficulty:
+
+				drawDifficultySelector(font, cursor, timer);
+
+				break;
 			case Credits:
 
 				drawCredits(font, cursor);
 
 				break;
 			case Exit:
+
 				isGameOver = true;
 
 				break;
@@ -235,7 +243,7 @@ namespace tob
 			playRotation = 15;
 
 			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				currentScene = Play;
+				currentScene = Difficulty;
 		}
 
 		if (CheckCollisionPointRec(GetMousePosition(), creditsBox))
@@ -444,4 +452,80 @@ namespace tob
 		}
 	}
 
+	void drawDifficultySelector(Font font, Texture2D cursor, int& timer)
+	{
+		float difficultyLength = MeasureTextEx(font, "Select difficulty", static_cast<float>(font.baseSize), 10).x;
+		float easyLength = MeasureTextEx(font, "Easy", static_cast<float>(font.baseSize), 0).x;
+		float mediumLength = MeasureTextEx(font, "Medium", static_cast<float>(font.baseSize), 0).x;
+		float hardLength = MeasureTextEx(font, "Hard", static_cast<float>(font.baseSize), 0).x;
+		
+
+		float easyRotation = 0;
+		float mediumRotation = 0;
+		float hardRotation = 0;
+
+		difficultyCollisions(easyRotation, mediumRotation, hardRotation, timer);
+
+		BeginDrawing();
+		ClearBackground(DARKGRAY);
+
+		DrawTextPro(font, "Select difficulty", Vector2{ GetScreenWidth() / 2 - difficultyLength / 2, static_cast<float>(GetScreenHeight() / 4.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 10, YELLOW);
+
+		DrawTextPro(font, "Easy", Vector2{ GetScreenWidth() / 2 - easyLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, easyRotation, static_cast<float>(font.baseSize), 0, YELLOW);
+
+		DrawTextPro(font, "Medium", Vector2{ GetScreenWidth() / 2 - mediumLength / 2, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, mediumRotation, static_cast<float>(font.baseSize), 0, YELLOW);
+
+		DrawTextPro(font, "Hard", Vector2{ GetScreenWidth() / 2 - hardLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, hardRotation, static_cast<float>(font.baseSize), 0, YELLOW);
+
+		DrawTexture(cursor, static_cast<int>(GetMousePosition().x - 15), static_cast<int>(GetMousePosition().y - 15), WHITE);
+
+
+		EndDrawing();
+	}
+
+	void difficultyCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, int& timer)
+	{
+		Rectangle easyBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.5f), 100, 40 };
+		Rectangle mediumBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.0f), 100, 40 };
+		Rectangle hardBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 1.70f), 100, 40 };
+
+		DrawRectangleLinesEx(easyBox, 1, RED);
+		DrawRectangleLinesEx(mediumBox, 1, RED);
+		DrawRectangleLinesEx(hardBox, 1, RED);
+
+
+
+		if (CheckCollisionPointRec(GetMousePosition(), easyBox))
+		{
+			easyRotation = 15;
+
+			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			{
+				timer = easyTimer;
+				currentScene = Play;
+			}
+		}
+
+		if (CheckCollisionPointRec(GetMousePosition(), mediumBox))
+		{
+			mediumRotation = 15;
+
+			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			{
+				timer = mediumTimer;
+				currentScene = Play;
+			}
+		}
+
+		if (CheckCollisionPointRec(GetMousePosition(), hardBox))
+		{
+			hardRotation = 15;
+
+			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			{
+				timer = hardTimer;
+				currentScene = Play;
+			}
+		}
+	}
 }

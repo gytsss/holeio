@@ -11,6 +11,7 @@ namespace tob
 	{
 		Menu,
 		Play,
+		Difficulty,
 		Credits,
 		Exit
 	};
