@@ -10,7 +10,13 @@ namespace tob
 
 	void createObject(Object& object, float requiredRad, Texture2D texture)
 	{
-		object.pos = { static_cast<float>(rand() % (GetScreenWidth() - 100) + 50), static_cast<float>(rand() % (GetScreenHeight() - 100) + 50) };
+		do
+		{
+			object.pos = { static_cast<float>(rand() % (GetScreenWidth() - 100) + 50), static_cast<float>(rand() % (GetScreenHeight() - 100) + 50) };
+
+		} while (fabs(object.pos.x - GetScreenWidth() / 2) < 50 || fabs(object.pos.y - GetScreenHeight() / 2) < 50);
+		
+
 		object.requiredRad = requiredRad;
 		object.texture = texture;
 		object.isActive = true;;

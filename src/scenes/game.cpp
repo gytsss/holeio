@@ -76,9 +76,10 @@ namespace tob
 
 			checkCollisions();
 
-			if (timer <= 0 && currentObjects > 0)
+			if (timer <= 0 && currentObjects > 0 && currentScene == Play)
 			{
 				currentScene = Menu;
+				timer = 1200;
 			}
 
 
