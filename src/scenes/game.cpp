@@ -3,13 +3,17 @@
 #include "objects/hole.h"
 #include "objects/objects.h"
 
+
 static void init();
 static void input();
+
 static void drawGame(Texture2D background, Font font, int timer, Texture2D cursor);
 static void drawMenu(Font font, Texture2D cursor);
-static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation);
-static void checkCollisions();
+static void drawCredits(Font font, Texture2D cursor);
 
+static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation);
+static void creditsCollisions(float& rotation);
+static void checkCollisions();
 static bool collisionHoleObject(Object& object);
 
 extern Hole hole;
@@ -61,7 +65,7 @@ void runGame()
 	}
 
 
-	
+
 	while (!WindowShouldClose() && !isGameOver)
 	{
 
@@ -81,17 +85,19 @@ void runGame()
 		case Menu:
 
 			drawMenu(font, cursor);
-			
+
 
 			break;
 		case Play:
 			timer--;
 
 			drawGame(sand, font, timer, cursor);
-			
+
 
 			break;
 		case Credits:
+
+			drawCredits(font, cursor);
 
 			break;
 		case Exit:
@@ -115,7 +121,7 @@ void init()
 
 	InitWindow(screenWidth, screenHeight, "Hole.io");
 	SetWindowState(FLAG_VSYNC_HINT);
-	HideCursor();
+
 
 #pragma warning( push )
 #pragma warning( disable : 4244)
@@ -161,7 +167,7 @@ void drawGame(Texture2D background, Font font, int timer, Texture2D cursor)
 
 	DrawTextEx(font, TextFormat("Timer: %i ", timer / 60), Vector2{ 200, 10 }, 30, 0, RED);
 
-	DrawTexture(cursor, static_cast<int>(GetMousePosition().x), static_cast<int>(GetMousePosition().y), WHITE);
+	DrawTexture(cursor, static_cast<int>(GetMousePosition().x - 15), static_cast<int>(GetMousePosition().y - 15), WHITE);
 
 	DrawFPS(10, 10);
 	EndDrawing();
@@ -193,7 +199,7 @@ void drawMenu(Font font, Texture2D cursor)
 
 	DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, exitRotation, static_cast<float>(font.baseSize), 0, GREEN);
 
-	DrawTexture(cursor, static_cast<int>(GetMousePosition().x), static_cast<int>(GetMousePosition().y), WHITE);
+	DrawTexture(cursor, static_cast<int>(GetMousePosition().x - 15), static_cast<int>(GetMousePosition().y - 15), WHITE);
 
 	EndDrawing();
 }
@@ -278,5 +284,65 @@ void checkCollisions()
 
 			trees[i].isActive = false;
 		}
+	}
+}
+
+void drawCredits(Font font, Texture2D cursor)
+{
+	float creditLength = MeasureTextEx(font, "Click here to see all the assets", static_cast<float>(font.baseSize), 0).x;
+	float itchLength = MeasureTextEx(font, "Click here to see my itch.io", static_cast<float>(font.baseSize), 0).x;
+
+	float rotation = 0;
+
+	creditsCollisions(rotation);
+
+	BeginDrawing();
+	ClearBackground(DARKGRAY);
+
+	DrawTextPro(font, "Click here to see all the assets", Vector2{ GetScreenWidth() / 2 - creditLength / 2, static_cast<float>(GetScreenHeight() / 4.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, YELLOW);
+
+	DrawTextPro(font, "Click here to see my itch.io", Vector2{ GetScreenWidth() / 2 - itchLength / 2, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, YELLOW);
+
+	DrawTextPro(font, "Back", Vector2{ 10, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 0, 0 }, rotation, static_cast<float>(font.baseSize), 0, YELLOW);
+
+	DrawTexture(cursor, static_cast<int>(GetMousePosition().x - 15), static_cast<int>(GetMousePosition().y - 15), WHITE);
+
+
+	EndDrawing();
+}
+
+void creditsCollisions(float& rotation)
+{
+	Rectangle assetsBox = { static_cast<float>(GetScreenWidth() / 2 - 220), static_cast<float>(GetScreenHeight() / 4.0f), 450, 40 };
+	Rectangle itchBox = { static_cast<float>(GetScreenWidth() / 2 - 200), static_cast<float>(GetScreenHeight() / 2.0f), 400, 40 };
+	Rectangle backBox = { 0.0f, static_cast<float>(GetScreenHeight() - 50), 80, 40 };
+
+	DrawRectangleLinesEx(assetsBox, 1, RED);
+	DrawRectangleLinesEx(itchBox, 1, RED);
+	DrawRectangleLinesEx(backBox, 1, RED);
+
+
+
+
+	if (CheckCollisionPointRec(GetMousePosition(), assetsBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+	{
+		OpenURL("https://opengameart.org/content/top-down-village-elements");
+		OpenURL("https://opengameart.org/content/top-down-foliage-collection");
+		//OpenURL("");
+		//OpenURL("");
+
+	}
+
+	if (CheckCollisionPointRec(GetMousePosition(), itchBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+	{
+		OpenURL("https://tgodd.itch.io/");
+	}
+
+	if (CheckCollisionPointRec(GetMousePosition(), backBox))
+	{
+		rotation = 15;
+
+		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			currentScene = Menu;
 	}
 }
