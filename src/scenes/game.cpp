@@ -8,7 +8,7 @@ namespace tob
 
 	static void init();
 	static void input();
-	static void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree);
+	static void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause);
 
 	static void drawGame(Texture2D background, Font font, int timer, Texture2D pause);
 	static void drawMenu(Font font);
@@ -26,7 +26,7 @@ namespace tob
 	static bool collisionHoleObject(Object& object);
 	static void checkObjectsOverlap(Texture2D bonefire, Texture2D palmtree, Texture2D tree);
 
-	static void checkWinOrLose(int& timer, int currentObjects);
+	static void checkWinOrLose(int& timer, int currentObjects, bool& win);
 
 	extern Hole hole;
 	extern Object bonefires[maxBonefires];
@@ -53,6 +53,7 @@ namespace tob
 
 		int timer = 0;
 		bool isGameOver = false;
+		bool win = false;
 		bool pause = false;
 		int currentObjects = 0;
 
@@ -81,7 +82,7 @@ namespace tob
 
 				checkObjectsOverlap(bonefire, palmtree, tree);
 
-				checkWinOrLose(timer, currentObjects);
+				checkWinOrLose(timer, currentObjects, win);
 			}
 
 
@@ -93,7 +94,7 @@ namespace tob
 			{
 			case Menu:
 
-				reset(currentObjects, timer, bonefire, palmtree, tree);
+				reset(currentObjects, timer, bonefire, palmtree, tree, win, pause);
 
 				drawMenu(font);
 
@@ -107,6 +108,25 @@ namespace tob
 
 				if (pause)
 					drawPause(font, pause);
+
+				if (win)
+				{
+					pause = true;
+
+					float WinLength = MeasureTextEx(font, "You win!", static_cast<float>(font.baseSize), 0).x;
+					float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
+
+
+
+					DrawRectangleGradientEx(Rectangle{ static_cast<float>(GetScreenWidth() / 2 - 250), static_cast<float>(GetScreenHeight() / 2 - 250), 500, 500 }, RED, ORANGE, YELLOW, RED);
+
+					DrawTextPro(font, "You win!", Vector2{ GetScreenWidth() / 2 - WinLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+
+					DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+
+				}
+
+				
 
 				break;
 			case DifficultySelector:
@@ -175,10 +195,12 @@ namespace tob
 			hole.pos.x += 1 * hole.speed.x * GetFrameTime();
 	}
 
-	void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree)
+	void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause)
 	{
 		currentObjects = 0;
 		timer = 0;
+		win = false;
+		pause = false;
 
 		createHole(hole, BLUE);
 
@@ -381,7 +403,7 @@ namespace tob
 		}
 	}
 
-	void checkWinOrLose(int& timer, int currentObjects)
+	void checkWinOrLose(int& timer, int currentObjects, bool& win)
 	{
 		if (timer <= 0 && currentObjects > 0 && currentScene == Play)
 		{
@@ -390,7 +412,7 @@ namespace tob
 		}
 		else if (currentObjects == 0 && timer > 0)
 		{
-			currentScene = Menu;
+			win = true;
 
 		}
 	}

@@ -20,6 +20,7 @@ namespace tob
 		object.requiredRad = requiredRad;
 		object.texture = texture;
 		object.isActive = true;;
+
 	}
 
 	void drawObject(Object object)
