@@ -111,8 +111,8 @@ namespace tob
 				if (pause)
 					drawPause(font, pause);
 
-				drawWinOrLoseScreen(win, lose, pause, font);
 
+				drawWinOrLoseScreen(win, lose, pause, font);
 
 				break;
 			case DifficultySelector:
