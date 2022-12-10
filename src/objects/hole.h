@@ -14,6 +14,6 @@ namespace tob
 		Color color;
 	};
 
-	void createHole(Hole& hole, Color color);
+	void createHole(Hole& hole, Color skin);
 	void drawHole();
 }

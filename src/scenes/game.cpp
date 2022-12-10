@@ -8,7 +8,7 @@ namespace tob
 
 	static void init();
 	static void input();
-	static void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose);
+	static void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose, Color skin);
 
 	static void drawGame(Texture2D background, Font font, int timer, Texture2D pause);
 	static void drawMenu(Font font);
@@ -17,12 +17,13 @@ namespace tob
 	static void drawPause(Font font, bool& pause);
 	static void drawCursor(Texture2D cursor);
 	static void drawWinOrLoseScreen(bool win, bool lose, bool& pause, Font font);
-	static void drawOptions(Font font);
+	static void drawOptions(Font font, Color& skin);
 
 	static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation, float& optionsRotation);
 	static void creditsCollisions(float& rotation);
 	static void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, int& timer);
 	static void pauseCollisions(bool& pause);
+	static void optionsCollision(float& rotation, Color& skin);
 
 	static void checkCollisions(int& currentObjects);
 	static bool collisionHoleObject(Object& object);
@@ -60,11 +61,13 @@ namespace tob
 		bool lose = false;
 		bool pause = false;
 
+		Color skin = BLUE;
+
 		palmtree.width = static_cast<int>(palmtree.width * 0.2f);
 		palmtree.height = static_cast<int>(palmtree.height * 0.2f);
 
 
-		createHole(hole, BLUE);
+		createHole(hole, skin);
 
 
 		createAllObjects(currentObjects, bonefire, palmtree, tree);
@@ -98,7 +101,7 @@ namespace tob
 			{
 			case Menu:
 
-				reset(currentObjects, timer, bonefire, palmtree, tree, win, pause, lose);
+				reset(currentObjects, timer, bonefire, palmtree, tree, win, pause, lose, skin);
 
 				drawMenu(font);
 
@@ -124,7 +127,7 @@ namespace tob
 				break;
 			case Options:
 
-				drawOptions(font);
+				drawOptions(font, skin);
 
 				break;
 			case Credits:
@@ -188,7 +191,7 @@ namespace tob
 			hole.pos.x += 1 * hole.speed.x * GetFrameTime();
 	}
 
-	void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose)
+	void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose, Color skin)
 	{
 		currentObjects = 0;
 		timer = 0;
@@ -196,7 +199,7 @@ namespace tob
 		pause = false;
 		lose = false;
 
-		createHole(hole, BLUE);
+		createHole(hole, skin);
 
 		createAllObjects(currentObjects, bonefire, palmtree, tree);
 
@@ -613,12 +616,44 @@ namespace tob
 		}
 	}
 
-	void drawOptions(Font font)
+	void drawOptions(Font font, Color& skin)
 	{
-		Rectangle backBox = { 0.0f, static_cast<float>(GetScreenHeight() - 50), 80, 40 };
-
+		float skinLength = MeasureTextEx(font, "Choose your skin:", static_cast<float>(font.baseSize), 0).x;
 		float rotation = 0;
 		
+
+		optionsCollision(rotation, skin);
+	
+
+		DrawTextPro(font, "The objetive of the game is to 'eat' all the objects on the\nmap, when you eat something, your size increases and you\nmove more slower. The difficulty depends on the time you\nhave to eat everything.", Vector2{ 250, static_cast<float>(GetScreenHeight() / 4.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, YELLOW);
+
+		DrawTextPro(font, "Choose your skin:", Vector2{ static_cast<float>(GetScreenWidth() / 2 - skinLength / 2), static_cast<float>(GetScreenHeight() / 1.7f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, YELLOW);
+
+		DrawTextPro(font, "Back", Vector2{ 10, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 0, 0 }, rotation, static_cast<float>(font.baseSize), 0, YELLOW);
+
+
+		DrawRectangle(150, 500, 40, 40, RED);
+		DrawRectangle(300, 500, 40, 40, BLUE);
+		DrawRectangle(450, 500, 40, 40, PURPLE);
+		DrawRectangle(600, 500, 40, 40, GREEN);
+		DrawRectangle(750, 500, 40, 40, WHITE);
+		DrawRectangle(900, 500, 40, 40, ORANGE);
+		DrawRectangle(1050, 500, 40, 40, SKYBLUE);
+
+
+	}
+
+	void optionsCollision(float& rotation, Color& skin)
+	{
+		Rectangle backBox = { 0.0f, static_cast<float>(GetScreenHeight() - 50), 80, 40 };
+		Rectangle redBox = { 150, 500, 40, 40 };
+		Rectangle blueBox = { 300, 500, 40, 40 };
+		Rectangle purpleBox = { 450, 500, 40, 40 };
+		Rectangle greenBox = { 600, 500, 40, 40 };
+		Rectangle whiteBox = { 750, 500, 40, 40 };
+		Rectangle orangeBox = { 900, 500, 40, 40 };
+		Rectangle skyblueBox = { 1050, 500, 40, 40 };
+
 
 		if (CheckCollisionPointRec(GetMousePosition(), backBox))
 		{
@@ -627,13 +662,28 @@ namespace tob
 			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 				currentScene = Menu;
 		}
-	
-
-		DrawTextPro(font, "The objetive of the game is to 'eat' all the objects on the\nmap, when you eat something, your size increases and you\nmove more slower. The difficulty depends on the time you\nhave to eat everything.", Vector2{ 250, static_cast<float>(GetScreenHeight() / 4.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, YELLOW);
-
-
-		DrawTextPro(font, "Back", Vector2{ 10, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 0, 0 }, rotation, static_cast<float>(font.baseSize), 0, YELLOW);
-
-
+		
+		if (CheckCollisionPointRec(GetMousePosition(), redBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			skin = RED;
+			
+		if (CheckCollisionPointRec(GetMousePosition(), blueBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			skin = BLUE;
+			
+		if (CheckCollisionPointRec(GetMousePosition(), purpleBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			skin = PURPLE;
+			
+		if (CheckCollisionPointRec(GetMousePosition(), greenBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			skin = GREEN;
+			
+		if (CheckCollisionPointRec(GetMousePosition(), whiteBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			skin = WHITE;
+			
+		if (CheckCollisionPointRec(GetMousePosition(), orangeBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			skin = ORANGE;
+			
+		if (CheckCollisionPointRec(GetMousePosition(), skyblueBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			skin = SKYBLUE;
+			
+		
 	}
 }

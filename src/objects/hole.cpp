@@ -5,7 +5,7 @@ namespace tob
 
 	Hole hole;
 
-	void createHole(Hole& playerHole, Color color)
+	void createHole(Hole& playerHole, Color skin)
 	{
 		playerHole.pos = { static_cast<float>(GetScreenWidth() / 2), static_cast<float>(GetScreenHeight() / 2) };
 
@@ -13,7 +13,7 @@ namespace tob
 
 		playerHole.radius = 10;
 
-		playerHole.color = color;
+		playerHole.color = skin;
 	}
 
 	void drawHole()
