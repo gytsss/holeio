@@ -1,6 +1,8 @@
 #pragma once
 #include "hole.h"
 
+
+
 namespace tob
 {
 
@@ -21,4 +23,6 @@ namespace tob
 	void drawObject(Object object);
 	void drawObjects();
 	void createAllObjects(int& currentObjects, Texture2D bonefire, Texture2D palmtree, Texture2D tree);
+	void checkObjectsOverlap(Texture2D bonefire, Texture2D palmtree, Texture2D tree);
+
 }

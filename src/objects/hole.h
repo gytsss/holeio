@@ -1,7 +1,8 @@
 #pragma once
-#include "raylib.h"
 #include <iostream>
-#include "ctime"
+
+#include "raylib.h"
+
 
 namespace tob
 {
@@ -16,4 +17,5 @@ namespace tob
 
 	void createHole(Hole& hole, Color skin);
 	void drawHole();
+
 }

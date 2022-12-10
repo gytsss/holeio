@@ -27,8 +27,6 @@ namespace tob
 
 	static void checkCollisions(int& currentObjects);
 	static bool collisionHoleObject(Object& object);
-	static void checkObjectsOverlap(Texture2D bonefire, Texture2D palmtree, Texture2D tree);
-
 	static void checkWinOrLose(int& timer, int currentObjects, bool& win, bool& lose);
 
 	extern Hole hole;
@@ -96,7 +94,6 @@ namespace tob
 			}
 
 
-
 			BeginDrawing();
 			ClearBackground(DARKGRAY);
 
@@ -158,6 +155,7 @@ namespace tob
 		UnloadTexture(sand);
 		UnloadTexture(cursor);
 		UnloadTexture(pauseIcon);
+		UnloadTexture(menu);
 
 		UnloadFont(font);
 
@@ -206,14 +204,6 @@ namespace tob
 
 		createAllObjects(currentObjects, bonefire, palmtree, tree);
 
-	}
-
-	bool collisionHoleObject(Object& object)
-	{
-		if (CheckCollisionCircles(hole.pos, hole.radius * 0.75f, object.pos, object.requiredRad) && object.isActive && hole.radius >= object.requiredRad)
-			return true;
-		else
-			return false;
 	}
 
 	void drawGame(Texture2D background, Font font, int timer, Texture2D pause)
@@ -308,54 +298,6 @@ namespace tob
 		}
 	}
 
-	void checkCollisions(int& currentObjects)
-	{
-		for (int i = 0; i < maxBonefires; i++)
-		{
-			if (collisionHoleObject(bonefires[i]))
-			{
-				hole.radius += 1;
-
-				hole.speed.x--;
-				hole.speed.y--;
-
-				bonefires[i].isActive = false;
-
-				currentObjects--;
-			}
-		}
-
-		for (int i = 0; i < maxPalmtrees; i++)
-		{
-			if (collisionHoleObject(palmtrees[i]))
-			{
-				hole.radius += 2;
-
-				hole.speed.x--;
-				hole.speed.y--;
-
-				palmtrees[i].isActive = false;
-
-				currentObjects--;
-			}
-		}
-
-		for (int i = 0; i < maxTrees; i++)
-		{
-			if (collisionHoleObject(trees[i]))
-			{
-				hole.radius += 5;
-
-				hole.speed.x--;
-				hole.speed.y--;
-
-				trees[i].isActive = false;
-
-				currentObjects--;
-			}
-		}
-	}
-
 	void drawCredits(Font font, Texture2D background)
 	{
 		float creditLength = MeasureTextEx(font, "Click here to see all the assets", static_cast<float>(font.baseSize), 0).x;
@@ -401,87 +343,6 @@ namespace tob
 
 			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 				currentScene = Menu;
-		}
-	}
-
-	void checkWinOrLose(int& timer, int currentObjects, bool& win, bool& lose)
-	{
-		if (timer <= 0 && currentObjects > 0 && currentScene == Play)
-		{
-			lose = true;
-
-		}
-		else if (currentObjects == 0 && timer > 0)
-		{
-			win = true;
-
-		}
-	}
-
-	void checkObjectsOverlap(Texture2D bonefire, Texture2D palmtree, Texture2D tree)
-	{
-		for (int i = 0; i < maxBonefires; i++)
-		{
-			//Bonefires overlap
-			for (int j = 0; j < maxBonefires; j++)
-			{
-				for (int k = 0; k < maxPalmtrees; k++)
-				{
-					while (fabs(bonefires[j].pos.x - palmtrees[k].pos.x) < 50 && fabs(bonefires[j].pos.y - palmtrees[k].pos.y) < 50)
-					{
-						createObject(bonefires[j], 10, bonefire);
-					}
-				}
-
-				for (int k = j + 1; k < maxBonefires; k++)
-				{
-					while (fabs(bonefires[j].pos.x - bonefires[k].pos.x) < 50 && fabs(bonefires[j].pos.y - bonefires[k].pos.y) < 50)
-					{
-						createObject(bonefires[j], 10, bonefire);
-					}
-				}
-
-				for (int k = 0; k < maxBonefires; k++)
-				{
-					while (fabs(bonefires[j].pos.x - trees[k].pos.x) < 75 && fabs(bonefires[j].pos.y - trees[k].pos.y) < 75)
-					{
-						createObject(bonefires[j], 10, bonefire);
-					}
-				}
-			}
-
-			//Palmtrees overlap
-			for (int j = 0; j < maxPalmtrees; j++)
-			{
-				for (int k = j + 1; k < maxPalmtrees; k++)
-				{
-					while (fabs(palmtrees[j].pos.x - palmtrees[k].pos.x) < 50 && fabs(palmtrees[j].pos.y - palmtrees[k].pos.y) < 50)
-					{
-						createObject(palmtrees[j], 20, palmtree);
-					}
-				}
-
-				for (int k = 0; k < maxTrees; k++)
-				{
-					while (fabs(palmtrees[j].pos.x - trees[k].pos.x) < 75 && fabs(palmtrees[j].pos.y - trees[k].pos.y) < 75)
-					{
-						createObject(palmtrees[j], 20, palmtree);
-					}
-				}
-			}
-
-			//Trees overlap
-			for (int j = 0; j < maxTrees; j++)
-			{
-				for (int k = j + 1; k < maxTrees; k++)
-				{
-					while (fabs(trees[j].pos.x - trees[k].pos.x) < 100 && fabs(trees[j].pos.y - trees[k].pos.y) < 100)
-					{
-						createObject(trees[j], 40, tree);
-					}
-				}
-
-			}
 		}
 	}
 
@@ -617,9 +478,9 @@ namespace tob
 			}
 			else if (lose)
 			{
-				float loseLength = MeasureTextEx(font, "You lose!", static_cast<float>(font.baseSize), 0).x;
+				float loseLength = MeasureTextEx(font, "You lose! No more time!", static_cast<float>(font.baseSize), 0).x;
 
-				DrawTextPro(font, "You lose!", Vector2{ GetScreenWidth() / 2 - loseLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+				DrawTextPro(font, "You lose! No more time!", Vector2{ GetScreenWidth() / 2 - loseLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
 			}
 
 			float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
@@ -639,7 +500,7 @@ namespace tob
 
 		DrawTexture(background, 0, 0, WHITE);
 
-		DrawTextPro(font, "The objetive of the game is to 'eat' all the objects on the\nmap, when you eat something, your size increases and you\nmove slower. The difficulty depends on the time you have\nto eat everything.", Vector2{ 250, static_cast<float>(GetScreenHeight() / 4.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, YELLOW);
+		DrawTextPro(font, "The objetive of the game is to 'eat' all the objects on the\nmap, when you eat something, your size increases and you\nmove slower. The difficulty depends on the time you have\nto eat everything.\n Movement: WASD.", Vector2{ 250, static_cast<float>(GetScreenHeight() / 4.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, YELLOW);
 
 		DrawTextPro(font, "Choose your skin:", Vector2{ static_cast<float>(GetScreenWidth() / 2 - skinLength / 2), static_cast<float>(GetScreenHeight() / 1.7f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
 
@@ -699,5 +560,75 @@ namespace tob
 			skin = SKYBLUE;
 
 
+	}
+
+	void checkCollisions(int& currentObjects)
+	{
+		for (int i = 0; i < maxBonefires; i++)
+		{
+			if (collisionHoleObject(bonefires[i]))
+			{
+				hole.radius += 1;
+
+				hole.speed.x--;
+				hole.speed.y--;
+
+				bonefires[i].isActive = false;
+
+				currentObjects--;
+			}
+		}
+
+		for (int i = 0; i < maxPalmtrees; i++)
+		{
+			if (collisionHoleObject(palmtrees[i]))
+			{
+				hole.radius += 2;
+
+				hole.speed.x--;
+				hole.speed.y--;
+
+				palmtrees[i].isActive = false;
+
+				currentObjects--;
+			}
+		}
+
+		for (int i = 0; i < maxTrees; i++)
+		{
+			if (collisionHoleObject(trees[i]))
+			{
+				hole.radius += 5;
+
+				hole.speed.x--;
+				hole.speed.y--;
+
+				trees[i].isActive = false;
+
+				currentObjects--;
+			}
+		}
+	}
+
+	void checkWinOrLose(int& timer, int currentObjects, bool& win, bool& lose)
+	{
+		if (timer <= 0 && currentObjects > 0 && currentScene == Play)
+		{
+			lose = true;
+
+		}
+		else if (currentObjects == 0 && timer > 0)
+		{
+			win = true;
+
+		}
+	}
+
+	bool collisionHoleObject(Object& object)
+	{
+		if (CheckCollisionCircles(hole.pos, hole.radius * 0.75f, object.pos, object.requiredRad) && object.isActive && hole.radius >= object.requiredRad)
+			return true;
+		else
+			return false;
 	}
 }
