@@ -17,8 +17,9 @@ namespace tob
 	static void drawPause(Font font, bool& pause);
 	static void drawCursor(Texture2D cursor);
 	static void drawWinOrLoseScreen(bool win, bool lose, bool& pause, Font font);
+	static void drawOptions(Font font);
 
-	static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation);
+	static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation, float& optionsRotation);
 	static void creditsCollisions(float& rotation);
 	static void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, int& timer);
 	static void pauseCollisions(bool& pause);
@@ -51,13 +52,13 @@ namespace tob
 		Font font = LoadFont("res/font.ttf");
 
 
-
 		int timer = 0;
+		int currentObjects = 0;
+
 		bool isGameOver = false;
 		bool win = false;
 		bool lose = false;
 		bool pause = false;
-		int currentObjects = 0;
 
 		palmtree.width = static_cast<int>(palmtree.width * 0.2f);
 		palmtree.height = static_cast<int>(palmtree.height * 0.2f);
@@ -65,8 +66,8 @@ namespace tob
 
 		createHole(hole, BLUE);
 
-		createAllObjects(currentObjects, bonefire, palmtree, tree);
 
+		createAllObjects(currentObjects, bonefire, palmtree, tree);
 
 
 		while (!WindowShouldClose() && !isGameOver)
@@ -74,6 +75,7 @@ namespace tob
 
 			if (CheckCollisionPointCircle(GetMousePosition(), Vector2{ static_cast<float>(GetScreenWidth() - 43), 40 }, 30) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && currentScene == Play)
 				pause = !pause;
+
 
 			if (!pause)
 			{
@@ -118,6 +120,11 @@ namespace tob
 			case DifficultySelector:
 
 				drawDifficultySelector(font, timer);
+
+				break;
+			case Options:
+
+				drawOptions(font);
 
 				break;
 			case Credits:
@@ -217,8 +224,6 @@ namespace tob
 
 		DrawTexture(pause, GetScreenWidth() - 75, 10, WHITE);
 
-		DrawCircleLines(GetScreenWidth() - 43, 40, 30, RED);
-
 		DrawFPS(10, 10);
 	}
 
@@ -226,38 +231,38 @@ namespace tob
 	{
 		float titleLength = MeasureTextEx(font, "Hole.io", static_cast<float>(font.baseSize), 20).x;
 		float playLength = MeasureTextEx(font, "Play", static_cast<float>(font.baseSize), 0).x;
+		float optionsLength = MeasureTextEx(font, "Options", static_cast<float>(font.baseSize), 0).x;
 		float creditsLength = MeasureTextEx(font, "Credits", static_cast<float>(font.baseSize), 0).x;
 		float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
 
 		float titleRotation = 0;
 		float playRotation = 0;
+		float optionsRotation = 0;
 		float creditsRotation = 0;
 		float exitRotation = 0;
 
-		menuCollisions(titleRotation, playRotation, creditsRotation, exitRotation);
+		menuCollisions(titleRotation, playRotation, creditsRotation, exitRotation, optionsRotation);
 
 
 		DrawTextPro(font, "Hole.io", Vector2{ GetScreenWidth() / 2 - titleLength / 2, static_cast<float>(GetScreenHeight() / 4.5f) }, Vector2{ 0, 0 }, titleRotation, static_cast<float>(font.baseSize), 20, YELLOW);
 
 		DrawTextPro(font, "Play", Vector2{ GetScreenWidth() / 2 - playLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, playRotation, static_cast<float>(font.baseSize), 0, GREEN);
 
-		DrawTextPro(font, "Credits", Vector2{ GetScreenWidth() / 2 - creditsLength / 2, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, creditsRotation, static_cast<float>(font.baseSize), 0, GREEN);
+		DrawTextPro(font, "Options", Vector2{ GetScreenWidth() / 2 - optionsLength / 2, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, optionsRotation, static_cast<float>(font.baseSize), 0, GREEN);
 
-		DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, exitRotation, static_cast<float>(font.baseSize), 0, GREEN);
+		DrawTextPro(font, "Credits", Vector2{ GetScreenWidth() / 2 - creditsLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, creditsRotation, static_cast<float>(font.baseSize), 0, GREEN);
+
+		DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.50f) }, Vector2{ 0, 0 }, exitRotation, static_cast<float>(font.baseSize), 0, GREEN);
 
 	}
 
-	void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation)
+	void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation, float& optionsRotation)
 	{
 		Rectangle titleBox = { static_cast<float>(GetScreenWidth() / 2 - 100), static_cast<float>(GetScreenHeight() / 4.5f), 200, 40 };
 		Rectangle playBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.5f), 100, 40 };
-		Rectangle creditsBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.0f), 100, 40 };
-		Rectangle exitBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 1.70f), 100, 40 };
-
-		DrawRectangleLinesEx(titleBox, 1, RED);
-		DrawRectangleLinesEx(playBox, 1, RED);
-		DrawRectangleLinesEx(creditsBox, 1, RED);
-		DrawRectangleLinesEx(exitBox, 1, RED);
+		Rectangle optionsBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.0f), 100, 40 };
+		Rectangle creditsBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 1.70f), 100, 40 };
+		Rectangle exitBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 1.50f), 100, 40 };
 
 
 		if (CheckCollisionPointRec(GetMousePosition(), titleBox))
@@ -269,6 +274,14 @@ namespace tob
 
 			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 				currentScene = DifficultySelector;
+		}
+		
+		if (CheckCollisionPointRec(GetMousePosition(), optionsBox))
+		{
+			optionsRotation = 15;
+
+			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+				currentScene = Options;
 		}
 
 		if (CheckCollisionPointRec(GetMousePosition(), creditsBox))
@@ -360,19 +373,12 @@ namespace tob
 		Rectangle itchBox = { static_cast<float>(GetScreenWidth() / 2 - 200), static_cast<float>(GetScreenHeight() / 2.0f), 400, 40 };
 		Rectangle backBox = { 0.0f, static_cast<float>(GetScreenHeight() - 50), 80, 40 };
 
-		DrawRectangleLinesEx(assetsBox, 1, RED);
-		DrawRectangleLinesEx(itchBox, 1, RED);
-		DrawRectangleLinesEx(backBox, 1, RED);
-
-
 
 
 		if (CheckCollisionPointRec(GetMousePosition(), assetsBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 		{
 			OpenURL("https://opengameart.org/content/top-down-village-elements");
 			OpenURL("https://opengameart.org/content/top-down-foliage-collection");
-			//OpenURL("");
-			//OpenURL("");
 
 		}
 
@@ -503,11 +509,6 @@ namespace tob
 		Rectangle mediumBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.0f), 100, 40 };
 		Rectangle hardBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 1.70f), 100, 40 };
 
-		DrawRectangleLinesEx(easyBox, 1, RED);
-		DrawRectangleLinesEx(mediumBox, 1, RED);
-		DrawRectangleLinesEx(hardBox, 1, RED);
-
-
 
 		if (CheckCollisionPointRec(GetMousePosition(), easyBox))
 		{
@@ -564,9 +565,6 @@ namespace tob
 		Rectangle playBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.5f), 100, 40 };
 		Rectangle exitBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 1.70f), 100, 40 };
 
-		DrawRectangleLinesEx(playBox, 1, BLACK);
-		DrawRectangleLinesEx(exitBox, 1, BLACK);
-
 
 		if (CheckCollisionPointRec(GetMousePosition(), playBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 			pause = false;
@@ -576,8 +574,6 @@ namespace tob
 			pause = false;
 			currentScene = Menu;
 		}
-
-
 
 	}
 
@@ -615,5 +611,29 @@ namespace tob
 			DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
 
 		}
+	}
+
+	void drawOptions(Font font)
+	{
+		Rectangle backBox = { 0.0f, static_cast<float>(GetScreenHeight() - 50), 80, 40 };
+
+		float rotation = 0;
+		
+
+		if (CheckCollisionPointRec(GetMousePosition(), backBox))
+		{
+			rotation = 15;
+
+			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+				currentScene = Menu;
+		}
+	
+
+		DrawTextPro(font, "The objetive of the game is to 'eat' all the objects on the\nmap, when you eat something, your size increases and you\nmove more slower. The difficulty depends on the time you\nhave to eat everything.", Vector2{ 250, static_cast<float>(GetScreenHeight() / 4.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, YELLOW);
+
+
+		DrawTextPro(font, "Back", Vector2{ 10, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 0, 0 }, rotation, static_cast<float>(font.baseSize), 0, YELLOW);
+
+
 	}
 }

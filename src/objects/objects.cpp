@@ -33,7 +33,6 @@ namespace tob
 				Vector2{ (object.requiredRad * 2.5f) / 2, (object.requiredRad * 2.5f) / 2 },
 				0.0f, WHITE);
 
-			DrawCircleLines(static_cast<int>(object.pos.x), static_cast<int>(object.pos.y), object.requiredRad, RED);
 		}
 	}
 
