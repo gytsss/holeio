@@ -5,7 +5,7 @@ namespace tob
 {
 	const int easyTimer = 6000;
 	const int mediumTimer = 3000;
-	const int hardTimer = 2400;
+	const int hardTimer = 500;
 
 	enum Scene
 	{
