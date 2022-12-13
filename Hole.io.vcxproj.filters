@@ -34,6 +34,9 @@
     <ClCompile Include="src\scenes\credits.cpp">
       <Filter>scenes</Filter>
     </ClCompile>
+    <ClCompile Include="src\scenes\options.cpp">
+      <Filter>scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\scenes\game.h">
@@ -46,6 +49,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\credits.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\options.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
