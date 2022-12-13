@@ -8,12 +8,12 @@ namespace tob
 
 	static void init();
 	static void input();
-	static void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose, Color skin);
+	static void reset(int& currentObjects, float& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose, Color skin);
 
-	static void drawGame(Texture2D background, Font font, int timer, Texture2D pause);
+	static void drawGame(Texture2D background, Font font, float timer, Texture2D pause);
 	static void drawMenu(Font font, Texture2D background);
 	static void drawCredits(Font font, Texture2D background);
-	static void drawDifficultySelector(Font font, int& timer, Texture2D background);
+	static void drawDifficultySelector(Font font, float& timer, Texture2D background);
 	static void drawPause(Font font, bool& pause);
 	static void drawCursor(Texture2D cursor);
 	static void drawWinOrLoseScreen(bool win, bool lose, bool& pause, Font font);
@@ -21,13 +21,13 @@ namespace tob
 
 	static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation, float& optionsRotation);
 	static void creditsCollisions(float& rotation);
-	static void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, int& timer);
+	static void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, float& timer);
 	static void pauseCollisions(bool& pause);
 	static void optionsCollision(float& rotation, Color& skin);
 
 	static void checkCollisions(int& currentObjects);
 	static bool collisionHoleObject(Object& object);
-	static void checkWinOrLose(int& timer, int currentObjects, bool& win, bool& lose);
+	static void checkWinOrLose(float& timer, int currentObjects, bool& win, bool& lose);
 
 	extern Hole hole;
 	extern Object bonefires[maxBonefires];
@@ -52,7 +52,7 @@ namespace tob
 		Font font = LoadFont("res/font.ttf");
 
 
-		int timer = 0;
+		float timer = 0;
 		int currentObjects = 0;
 
 		bool isGameOver = false;
@@ -109,7 +109,7 @@ namespace tob
 			case Play:
 
 				if (!pause)
-					timer--;
+					timer -= GetFrameTime();
 
 				drawGame(sand, font, timer, pauseIcon);
 
@@ -167,7 +167,7 @@ namespace tob
 		const int screenWidth = 1280;
 		const int screenHeight = 720;
 
-		InitWindow(screenWidth, screenHeight, "Hole.io");
+		InitWindow(screenWidth, screenHeight, "Hole.io 1.1");
 		SetWindowState(FLAG_VSYNC_HINT);
 		HideCursor();
 
@@ -192,10 +192,10 @@ namespace tob
 			hole.pos.x += 1 * hole.speed.x * GetFrameTime();
 	}
 
-	void reset(int& currentObjects, int& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose, Color skin)
+	void reset(int& currentObjects, float& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose, Color skin)
 	{
 		currentObjects = 0;
-		timer = 0;
+		timer = 0.0f;
 		win = false;
 		pause = false;
 		lose = false;
@@ -206,7 +206,7 @@ namespace tob
 
 	}
 
-	void drawGame(Texture2D background, Font font, int timer, Texture2D pause)
+	void drawGame(Texture2D background, Font font, float timer, Texture2D pause)
 	{
 		DrawTexture(background, 0, 0, WHITE);
 
@@ -216,7 +216,7 @@ namespace tob
 
 		DrawTextEx(font, TextFormat("Score: %i", static_cast<int>(hole.radius - 10)), Vector2{ 500, 10 }, 30, 0, RED);
 
-		DrawTextEx(font, TextFormat("Timer: %i ", timer / 60), Vector2{ 200, 10 }, 30, 0, RED);
+		DrawTextEx(font, TextFormat("Timer: %i ", static_cast<int>(timer)), Vector2{ 200, 10 }, 30, 0, RED);
 
 		DrawTexture(pause, GetScreenWidth() - 75, 10, WHITE);
 
@@ -346,7 +346,7 @@ namespace tob
 		}
 	}
 
-	void drawDifficultySelector(Font font, int& timer, Texture2D background)
+	void drawDifficultySelector(Font font, float& timer, Texture2D background)
 	{
 		float difficultyLength = MeasureTextEx(font, "Select difficulty", static_cast<float>(font.baseSize), 10).x;
 		float easyLength = MeasureTextEx(font, "Easy", static_cast<float>(font.baseSize), 0).x;
@@ -375,7 +375,7 @@ namespace tob
 
 	}
 
-	void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, int& timer)
+	void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, float& timer)
 	{
 		Rectangle easyBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.5f), 100, 40 };
 		Rectangle mediumBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.0f), 100, 40 };
@@ -515,7 +515,6 @@ namespace tob
 		DrawRectangle(900, 500, 40, 40, ORANGE);
 		DrawRectangle(1050, 500, 40, 40, SKYBLUE);
 
-
 	}
 
 	void optionsCollision(float& rotation, Color& skin)
@@ -610,7 +609,7 @@ namespace tob
 		}
 	}
 
-	void checkWinOrLose(int& timer, int currentObjects, bool& win, bool& lose)
+	void checkWinOrLose(float& timer, int currentObjects, bool& win, bool& lose)
 	{
 		if (timer <= 0 && currentObjects > 0 && currentScene == Play)
 		{

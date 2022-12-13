@@ -13,9 +13,9 @@ namespace tob
 		Exit
 	};
 
-	const int easyTimer = 4200;
-	const int mediumTimer = 3000;
-	const int hardTimer = 2100;
+	const float easyTimer = 70.0f;
+	const float mediumTimer = 50.0f;
+	const float hardTimer = 35.0f;
 
 
 	void runGame();
