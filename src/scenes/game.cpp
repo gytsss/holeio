@@ -2,6 +2,7 @@
 
 #include "objects/hole.h"
 #include "objects/objects.h"
+#include "credits.h"
 
 namespace tob
 {
@@ -12,7 +13,7 @@ namespace tob
 
 	static void drawGame(Texture2D background, Font font, float timer, Texture2D pause);
 	static void drawMenu(Font font, Texture2D background);
-	static void drawCredits(Font font, Texture2D background);
+	
 	static void drawDifficultySelector(Font font, float& timer, Texture2D background);
 	static void drawPause(Font font, bool& pause);
 	static void drawCursor(Texture2D cursor);
@@ -20,7 +21,6 @@ namespace tob
 	static void drawOptions(Font font, Color& skin, Texture2D background);
 
 	static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation, float& optionsRotation);
-	static void creditsCollisions(float& rotation);
 	static void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, float& timer);
 	static void pauseCollisions(bool& pause);
 	static void optionsCollision(float& rotation, Color& skin);
@@ -132,7 +132,7 @@ namespace tob
 				break;
 			case Credits:
 
-				drawCredits(font, menu);
+				drawCredits(font, menu, currentScene);
 
 				break;
 			case Exit:
@@ -220,7 +220,6 @@ namespace tob
 
 		DrawTexture(pause, GetScreenWidth() - 75, 10, WHITE);
 
-		DrawFPS(10, 10);
 	}
 
 	void drawMenu(Font font, Texture2D background)
@@ -298,54 +297,7 @@ namespace tob
 		}
 	}
 
-	void drawCredits(Font font, Texture2D background)
-	{
-		float creditLength = MeasureTextEx(font, "Click here to see all the assets", static_cast<float>(font.baseSize), 0).x;
-		float itchLength = MeasureTextEx(font, "Click here to see my itch.io", static_cast<float>(font.baseSize), 0).x;
-
-		float rotation = 0;
-
-		creditsCollisions(rotation);
-
-		DrawTexture(background, 0, 0, WHITE);
-
-		DrawTextPro(font, "Click here to see all the assets", Vector2{ GetScreenWidth() / 2 - creditLength / 2, static_cast<float>(GetScreenHeight() / 3.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-
-		DrawTextPro(font, "Click here to see my itch.io", Vector2{ GetScreenWidth() / 2 - itchLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-
-		DrawTextPro(font, "Back", Vector2{ 10, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 0, 0 }, rotation, static_cast<float>(font.baseSize), 0, BLACK);
-
-	}
-
-	void creditsCollisions(float& rotation)
-	{
-		Rectangle assetsBox = { static_cast<float>(GetScreenWidth() / 2 - 220), static_cast<float>(GetScreenHeight() / 3.0f), 450, 40 };
-		Rectangle itchBox = { static_cast<float>(GetScreenWidth() / 2 - 200), static_cast<float>(GetScreenHeight() / 1.70f), 400, 40 };
-		Rectangle backBox = { 0.0f, static_cast<float>(GetScreenHeight() - 50), 80, 40 };
-
-
-
-		if (CheckCollisionPointRec(GetMousePosition(), assetsBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-		{
-			OpenURL("https://opengameart.org/content/top-down-village-elements");
-			OpenURL("https://opengameart.org/content/top-down-foliage-collection");
-
-		}
-
-		if (CheckCollisionPointRec(GetMousePosition(), itchBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-		{
-			OpenURL("https://tgodd.itch.io/");
-		}
-
-		if (CheckCollisionPointRec(GetMousePosition(), backBox))
-		{
-			rotation = 15;
-
-			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				currentScene = Menu;
-		}
-	}
-
+	
 	void drawDifficultySelector(Font font, float& timer, Texture2D background)
 	{
 		float difficultyLength = MeasureTextEx(font, "Select difficulty", static_cast<float>(font.baseSize), 10).x;
