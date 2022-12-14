@@ -5,11 +5,15 @@ namespace tob
 
 	void drawOptions(Font font, Color& skin, Texture2D background, Scene& currentScene)
 	{
+		Button back;
+
+		createButton(back, Vector2{ 0.0f, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 80,40 }, "Back");
+
 		float skinLength = MeasureTextEx(font, "Choose your skin:", static_cast<float>(font.baseSize), 0).x;
 		float rotation = 0;
 
 
-		optionsCollision(rotation, skin, currentScene);
+		optionsCollision(rotation, skin, currentScene, back);
 
 		DrawTexture(background, 0, 0, WHITE);
 
@@ -17,8 +21,7 @@ namespace tob
 
 		DrawTextPro(font, "Choose your skin:", Vector2{ static_cast<float>(GetScreenWidth() / 2 - skinLength / 2), static_cast<float>(GetScreenHeight() / 1.7f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
 
-		DrawTextPro(font, "Back", Vector2{ 10, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 0, 0 }, rotation, static_cast<float>(font.baseSize), 0, BLACK);
-
+		drawButton(back, font);
 
 		DrawRectangle(150, 500, boxSize, boxSize, RED);
 		DrawRectangle(300, 500, boxSize, boxSize, BLUE);
@@ -30,9 +33,8 @@ namespace tob
 
 	}
 
-	void optionsCollision(float& rotation, Color& skin, Scene& currentScene)
+	void optionsCollision(float& rotation, Color& skin, Scene& currentScene, Button button)
 	{
-		Rectangle backBox = { 0.0f, static_cast<float>(GetScreenHeight() - 50), 80, 40 };
 		Rectangle redBox = { 150, 500, 40, 40 };
 		Rectangle blueBox = { 300, 500, 40, 40 };
 		Rectangle purpleBox = { 450, 500, 40, 40 };
@@ -42,7 +44,7 @@ namespace tob
 		Rectangle skyblueBox = { 1050, 500, 40, 40 };
 
 
-		if (CheckCollisionPointRec(GetMousePosition(), backBox))
+		if (checkCollisionMouseButton(button))
 		{
 			rotation = 15;
 

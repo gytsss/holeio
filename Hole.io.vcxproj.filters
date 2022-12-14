@@ -40,6 +40,9 @@
     <ClCompile Include="src\scenes\menu.cpp">
       <Filter>scenes</Filter>
     </ClCompile>
+    <ClCompile Include="src\objects\button.cpp">
+      <Filter>objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\scenes\game.h">
@@ -58,6 +61,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\menu.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects\button.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
