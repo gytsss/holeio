@@ -1,5 +1,7 @@
 #include "objects.h"
 
+#include <iostream>
+#include <ctime>
 
 namespace tob
 {
