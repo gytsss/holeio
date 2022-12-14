@@ -15,7 +15,7 @@ namespace tob
 
 	const float easyTimer = 70.0f;
 	const float mediumTimer = 50.0f;
-	const float hardTimer = 35.0f;
+	const float hardTimer = 5.0f;
 
 
 	void runGame();

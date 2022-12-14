@@ -4,6 +4,7 @@
 #include "objects/objects.h"
 #include "credits.h"
 #include "options.h"
+#include "menu.h"
 
 namespace tob
 {
@@ -13,15 +14,10 @@ namespace tob
 	static void reset(int& currentObjects, float& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose, Color skin);
 
 	static void drawGame(Texture2D background, Font font, float timer, Texture2D pause);
-	static void drawMenu(Font font, Texture2D background);
-	
-	static void drawDifficultySelector(Font font, float& timer, Texture2D background);
 	static void drawPause(Font font, bool& pause);
 	static void drawCursor(Texture2D cursor);
 	static void drawWinOrLoseScreen(bool win, bool lose, bool& pause, Font font);
 
-	static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation, float& optionsRotation);
-	static void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, float& timer);
 	static void pauseCollisions(bool& pause);
 
 	static void checkCollisions(int& currentObjects);
@@ -80,10 +76,11 @@ namespace tob
 				pause = !pause;
 
 
-			if (!pause)
+			if (!pause && currentScene == Play)
 			{
-				input();
+				timer -= GetFrameTime();
 
+				input();
 
 				checkCollisions(currentObjects);
 
@@ -102,26 +99,22 @@ namespace tob
 
 				reset(currentObjects, timer, bonefire, palmtree, tree, win, pause, lose, skin);
 
-				drawMenu(font, menu);
+				drawMenu(font, menu, currentScene);
 
 				break;
 			case Play:
-
-				if (!pause)
-					timer -= GetFrameTime();
 
 				drawGame(sand, font, timer, pauseIcon);
 
 				if (pause)
 					drawPause(font, pause);
 
-
 				drawWinOrLoseScreen(win, lose, pause, font);
 
 				break;
 			case DifficultySelector:
 
-				drawDifficultySelector(font, timer, menu);
+				drawDifficultySelector(font, timer, menu, currentScene);
 
 				break;
 			case Options:
@@ -221,161 +214,10 @@ namespace tob
 
 	}
 
-	void drawMenu(Font font, Texture2D background)
-	{
-		float titleLength = MeasureTextEx(font, "Hole.io", static_cast<float>(font.baseSize), 20).x;
-		float playLength = MeasureTextEx(font, "Play", static_cast<float>(font.baseSize), 0).x;
-		float optionsLength = MeasureTextEx(font, "Options", static_cast<float>(font.baseSize), 0).x;
-		float creditsLength = MeasureTextEx(font, "Credits", static_cast<float>(font.baseSize), 0).x;
-		float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
-
-		float titleRotation = 0;
-		float playRotation = 0;
-		float optionsRotation = 0;
-		float creditsRotation = 0;
-		float exitRotation = 0;
-
-		menuCollisions(titleRotation, playRotation, creditsRotation, exitRotation, optionsRotation);
-
-		DrawTexture(background, 0, 0, WHITE);
-
-		DrawTextPro(font, "Hole.io", Vector2{ GetScreenWidth() / 2 - titleLength / 2, static_cast<float>(GetScreenHeight() / 4.5f) }, Vector2{ 0, 0 }, titleRotation, static_cast<float>(font.baseSize), 20, RED);
-
-		DrawTextPro(font, "Play", Vector2{ GetScreenWidth() / 2 - playLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, playRotation, static_cast<float>(font.baseSize), 0, BLACK);
-
-		DrawTextPro(font, "Options", Vector2{ GetScreenWidth() / 2 - optionsLength / 2, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, optionsRotation, static_cast<float>(font.baseSize), 0, BLACK);
-
-		DrawTextPro(font, "Credits", Vector2{ GetScreenWidth() / 2 - creditsLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, creditsRotation, static_cast<float>(font.baseSize), 0, BLACK);
-
-		DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.50f) }, Vector2{ 0, 0 }, exitRotation, static_cast<float>(font.baseSize), 0, BLACK);
-
-	}
-
-	void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation, float& optionsRotation)
-	{
-		Rectangle titleBox = { static_cast<float>(GetScreenWidth() / 2 - 100), static_cast<float>(GetScreenHeight() / 4.5f), 200, 40 };
-		Rectangle playBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.5f), 100, 40 };
-		Rectangle optionsBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.0f), 100, 40 };
-		Rectangle creditsBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 1.70f), 100, 40 };
-		Rectangle exitBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 1.50f), 100, 40 };
-
-
-		if (CheckCollisionPointRec(GetMousePosition(), titleBox))
-			titleRotation = 15;
-
-		if (CheckCollisionPointRec(GetMousePosition(), playBox))
-		{
-			playRotation = 15;
-
-			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				currentScene = DifficultySelector;
-		}
-
-		if (CheckCollisionPointRec(GetMousePosition(), optionsBox))
-		{
-			optionsRotation = 15;
-
-			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				currentScene = Options;
-		}
-
-		if (CheckCollisionPointRec(GetMousePosition(), creditsBox))
-		{
-			creditsRotation = 15;
-
-			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				currentScene = Credits;
-		}
-
-		if (CheckCollisionPointRec(GetMousePosition(), exitBox))
-		{
-			exitRotation = 15;
-
-			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				currentScene = Exit;
-		}
-	}
-
-	void drawDifficultySelector(Font font, float& timer, Texture2D background)
-	{
-		float difficultyLength = MeasureTextEx(font, "Select difficulty", static_cast<float>(font.baseSize), 10).x;
-		float easyLength = MeasureTextEx(font, "Easy", static_cast<float>(font.baseSize), 0).x;
-		float mediumLength = MeasureTextEx(font, "Medium", static_cast<float>(font.baseSize), 0).x;
-		float hardLength = MeasureTextEx(font, "Hard", static_cast<float>(font.baseSize), 0).x;
-
-
-		float easyRotation = 0;
-		float mediumRotation = 0;
-		float hardRotation = 0;
-
-		difficultySelectorCollisions(easyRotation, mediumRotation, hardRotation, timer);
-
-
-		DrawTexture(background, 0, 0, WHITE);
-
-		DrawTextPro(font, "Select difficulty", Vector2{ GetScreenWidth() / 2 - difficultyLength / 2, static_cast<float>(GetScreenHeight() / 4.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 10, BLACK);
-
-		DrawTextPro(font, "Easy", Vector2{ GetScreenWidth() / 2 - easyLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, easyRotation, static_cast<float>(font.baseSize), 0, GREEN);
-
-		DrawTextPro(font, "Medium", Vector2{ GetScreenWidth() / 2 - mediumLength / 2, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, mediumRotation, static_cast<float>(font.baseSize), 0, YELLOW);
-
-		DrawTextPro(font, "Hard", Vector2{ GetScreenWidth() / 2 - hardLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, hardRotation, static_cast<float>(font.baseSize), 0, RED);
-
-		DrawTextPro(font, "Back", Vector2{ 10, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-
-	}
-
-	void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, float& timer)
-	{
-		Rectangle easyBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.5f), 100, 40 };
-		Rectangle mediumBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.0f), 100, 40 };
-		Rectangle hardBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 1.70f), 100, 40 };
-		Rectangle backBox = { 0.0f, static_cast<float>(GetScreenHeight() - 50), 80, 40 };
-
-
-		if (CheckCollisionPointRec(GetMousePosition(), easyBox))
-		{
-			easyRotation = 15;
-
-			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-			{
-				timer = easyTimer;
-				currentScene = Play;
-			}
-		}
-
-		if (CheckCollisionPointRec(GetMousePosition(), mediumBox))
-		{
-			mediumRotation = 15;
-
-			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-			{
-				timer = mediumTimer;
-				currentScene = Play;
-			}
-		}
-
-		if (CheckCollisionPointRec(GetMousePosition(), hardBox))
-		{
-			hardRotation = 15;
-
-			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-			{
-				timer = hardTimer;
-				currentScene = Play;
-			}
-		}
-
-		if (CheckCollisionPointRec(GetMousePosition(), backBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-			currentScene = Menu;
-
-	}
-
 	void drawPause(Font font, bool& pause)
 	{
 		float playLength = MeasureTextEx(font, "Play", static_cast<float>(font.baseSize), 0).x;
 		float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
-
 
 
 		DrawRectangleGradientEx(Rectangle{ static_cast<float>(GetScreenWidth() / 2 - 250), static_cast<float>(GetScreenHeight() / 2 - 250), 500, 500 }, RED, ORANGE, YELLOW, RED);
@@ -424,13 +266,14 @@ namespace tob
 				float winLength = MeasureTextEx(font, "You win!", static_cast<float>(font.baseSize), 0).x;
 
 				DrawTextPro(font, "You win!", Vector2{ GetScreenWidth() / 2 - winLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-
 			}
 			else if (lose)
 			{
 				float loseLength = MeasureTextEx(font, "You lose! No more time!", static_cast<float>(font.baseSize), 0).x;
 
 				DrawTextPro(font, "You lose! No more time!", Vector2{ GetScreenWidth() / 2 - loseLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+
+				DrawTextPro(font, TextFormat("Final score: %i", static_cast<int>(hole.radius - 10.0f)), Vector2{GetScreenWidth() / 2 - 80.0f, static_cast<float>(GetScreenHeight() / 2.0f)}, Vector2{0, 0}, 0, static_cast<float>(font.baseSize), 0, BLACK);
 			}
 
 			float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
