@@ -48,29 +48,29 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\scenes\game.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\objects\hole.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\objects\objects.h">
-      <Filter>Archivos de encabezado</Filter>
+    <ClInclude Include="src\objects\button.h">
+      <Filter>objects</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\credits.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\options.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\menu.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\objects\button.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\objects\cursor.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\game.h">
+      <Filter>scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects\hole.h">
+      <Filter>objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\menu.h">
+      <Filter>scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects\objects.h">
+      <Filter>objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\options.h">
+      <Filter>scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
