@@ -171,17 +171,7 @@ namespace tob
 
 	void input()
 	{
-		if (IsKeyDown(KEY_W) && hole.pos.y > 0)
-			hole.pos.y -= 1 * hole.speed.y * GetFrameTime();
-
-		if (IsKeyDown(KEY_S) && hole.pos.y < GetScreenHeight())
-			hole.pos.y += 1 * hole.speed.y * GetFrameTime();
-
-		if (IsKeyDown(KEY_A) && hole.pos.x > 0)
-			hole.pos.x -= 1 * hole.speed.x * GetFrameTime();
-
-		if (IsKeyDown(KEY_D) && hole.pos.x < GetScreenWidth())
-			hole.pos.x += 1 * hole.speed.x * GetFrameTime();
+		holeMovement();
 	}
 
 	void reset(int& currentObjects, float& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose, Color skin)
@@ -273,7 +263,7 @@ namespace tob
 
 				DrawTextPro(font, "You lose! No more time!", Vector2{ GetScreenWidth() / 2 - loseLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
 
-				DrawTextPro(font, TextFormat("Final score: %i", static_cast<int>(hole.radius - 10.0f)), Vector2{GetScreenWidth() / 2 - 80.0f, static_cast<float>(GetScreenHeight() / 2.0f)}, Vector2{0, 0}, 0, static_cast<float>(font.baseSize), 0, BLACK);
+				DrawTextPro(font, TextFormat("Final score: %i", static_cast<int>(hole.radius - 10.0f)), Vector2{ GetScreenWidth() / 2 - 80.0f, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
 			}
 
 			float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
@@ -289,10 +279,7 @@ namespace tob
 		{
 			if (collisionHoleObject(bonefires[i]))
 			{
-				hole.radius += 1;
-
-				hole.speed.x--;
-				hole.speed.y--;
+				eatLogic(1);
 
 				bonefires[i].isActive = false;
 
@@ -304,10 +291,7 @@ namespace tob
 		{
 			if (collisionHoleObject(palmtrees[i]))
 			{
-				hole.radius += 2;
-
-				hole.speed.x--;
-				hole.speed.y--;
+				eatLogic(2);
 
 				palmtrees[i].isActive = false;
 
@@ -319,10 +303,7 @@ namespace tob
 		{
 			if (collisionHoleObject(trees[i]))
 			{
-				hole.radius += 5;
-
-				hole.speed.x--;
-				hole.speed.y--;
+				eatLogic(5);
 
 				trees[i].isActive = false;
 

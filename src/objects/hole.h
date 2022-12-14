@@ -17,5 +17,10 @@ namespace tob
 
 	void createHole(Hole& hole, Color skin);
 	void drawHole();
+	void holeMovement();
 
+	void eatLogic(int sizeIncrease);
+
+
+	
 }
