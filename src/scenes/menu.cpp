@@ -2,10 +2,8 @@
 
 namespace tob
 {
-
-	static void drawDifficultySelector(Font font, float& timer, Texture2D background, Scene& currentScene);
+	static void menuCollisions(float& titleRotation, float& playRotation, float& creditsRotation, float& exitRotation, float& optionsRotation, Scene& currentScene);
 	static void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, float& timer, Scene& currentScene);
-
 
 
 	void drawMenu(Font font, Texture2D background, Scene& currentScene)

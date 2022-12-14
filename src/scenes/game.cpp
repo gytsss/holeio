@@ -14,15 +14,16 @@ namespace tob
 	static void input();
 	static void reset(int& currentObjects, float& timer, Texture2D bonefire, Texture2D palmtree, Texture2D tree, bool& win, bool& pause, bool& lose, Color skin);
 
+
+	static void pauseCollisions(bool& pause);
+	static void checkCollisions(int& currentObjects);
+	static void checkWinOrLose(float& timer, int currentObjects, bool& win, bool& lose);
+	static bool collisionHoleObject(Object& object);
+
 	static void drawGame(Texture2D background, Font font, float timer, Texture2D pause);
 	static void drawPause(Font font, bool& pause);
 	static void drawWinOrLoseScreen(bool win, bool lose, bool& pause, Font font);
 
-	static void pauseCollisions(bool& pause);
-
-	static void checkCollisions(int& currentObjects);
-	static bool collisionHoleObject(Object& object);
-	static void checkWinOrLose(float& timer, int currentObjects, bool& win, bool& lose);
 
 	extern Hole hole;
 	extern Object bonefires[maxBonefires];
@@ -188,37 +189,6 @@ namespace tob
 
 	}
 
-	void drawGame(Texture2D background, Font font, float timer, Texture2D pause)
-	{
-		DrawTexture(background, 0, 0, WHITE);
-
-		drawHole();
-
-		drawObjects();
-
-		DrawTextEx(font, TextFormat("Score: %i", static_cast<int>(hole.radius - 10)), Vector2{ 500, 10 }, 30, 0, RED);
-
-		DrawTextEx(font, TextFormat("Timer: %i ", static_cast<int>(timer)), Vector2{ 200, 10 }, 30, 0, RED);
-
-		DrawTexture(pause, GetScreenWidth() - 75, 10, WHITE);
-
-	}
-
-	void drawPause(Font font, bool& pause)
-	{
-		float playLength = MeasureTextEx(font, "Play", static_cast<float>(font.baseSize), 0).x;
-		float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
-
-
-		DrawRectangleGradientEx(Rectangle{ static_cast<float>(GetScreenWidth() / 2 - 250), static_cast<float>(GetScreenHeight() / 2 - 250), 500, 500 }, RED, ORANGE, YELLOW, RED);
-
-		DrawTextPro(font, "Play", Vector2{ GetScreenWidth() / 2 - playLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-
-		DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-
-		pauseCollisions(pause);
-	}
-
 	void pauseCollisions(bool& pause)
 	{
 		Rectangle playBox = { static_cast<float>(GetScreenWidth() / 2 - 50), static_cast<float>(GetScreenHeight() / 2.5f), 100, 40 };
@@ -234,37 +204,6 @@ namespace tob
 			currentScene = Menu;
 		}
 
-	}
-
-	void drawWinOrLoseScreen(bool win, bool lose, bool& pause, Font font)
-	{
-		if (win || lose)
-		{
-			pause = true;
-
-			DrawRectangleGradientEx(Rectangle{ static_cast<float>(GetScreenWidth() / 2 - 250), static_cast<float>(GetScreenHeight() / 2 - 250), 500, 500 }, RED, ORANGE, YELLOW, RED);
-
-
-			if (win)
-			{
-				float winLength = MeasureTextEx(font, "You win!", static_cast<float>(font.baseSize), 0).x;
-
-				DrawTextPro(font, "You win!", Vector2{ GetScreenWidth() / 2 - winLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-			}
-			else if (lose)
-			{
-				float loseLength = MeasureTextEx(font, "You lose! No more time!", static_cast<float>(font.baseSize), 0).x;
-
-				DrawTextPro(font, "You lose! No more time!", Vector2{ GetScreenWidth() / 2 - loseLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-
-				DrawTextPro(font, TextFormat("Final score: %i", static_cast<int>(hole.radius - 10.0f)), Vector2{ GetScreenWidth() / 2 - 80.0f, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-			}
-
-			float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
-
-			DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
-
-		}
 	}
 
 	void checkCollisions(int& currentObjects)
@@ -326,5 +265,67 @@ namespace tob
 			return true;
 		else
 			return false;
+	}
+
+	void drawGame(Texture2D background, Font font, float timer, Texture2D pause)
+	{
+		DrawTexture(background, 0, 0, WHITE);
+
+		drawHole();
+
+		drawObjects();
+
+		DrawTextEx(font, TextFormat("Score: %i", static_cast<int>(hole.radius - 10)), Vector2{ 500, 10 }, 30, 0, RED);
+
+		DrawTextEx(font, TextFormat("Timer: %i ", static_cast<int>(timer)), Vector2{ 200, 10 }, 30, 0, RED);
+
+		DrawTexture(pause, GetScreenWidth() - 75, 10, WHITE);
+
+	}
+
+	void drawPause(Font font, bool& pause)
+	{
+		float playLength = MeasureTextEx(font, "Play", static_cast<float>(font.baseSize), 0).x;
+		float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
+
+
+		DrawRectangleGradientEx(Rectangle{ static_cast<float>(GetScreenWidth() / 2 - 250), static_cast<float>(GetScreenHeight() / 2 - 250), 500, 500 }, RED, ORANGE, YELLOW, RED);
+
+		DrawTextPro(font, "Play", Vector2{ GetScreenWidth() / 2 - playLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+
+		DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+
+		pauseCollisions(pause);
+	}
+
+	void drawWinOrLoseScreen(bool win, bool lose, bool& pause, Font font)
+	{
+		if (win || lose)
+		{
+			pause = true;
+
+			DrawRectangleGradientEx(Rectangle{ static_cast<float>(GetScreenWidth() / 2 - 250), static_cast<float>(GetScreenHeight() / 2 - 250), 500, 500 }, RED, ORANGE, YELLOW, RED);
+
+
+			if (win)
+			{
+				float winLength = MeasureTextEx(font, "You win!", static_cast<float>(font.baseSize), 0).x;
+
+				DrawTextPro(font, "You win!", Vector2{ GetScreenWidth() / 2 - winLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+			}
+			else if (lose)
+			{
+				float loseLength = MeasureTextEx(font, "You lose! No more time!", static_cast<float>(font.baseSize), 0).x;
+
+				DrawTextPro(font, "You lose! No more time!", Vector2{ GetScreenWidth() / 2 - loseLength / 2, static_cast<float>(GetScreenHeight() / 2.5f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+
+				DrawTextPro(font, TextFormat("Final score: %i", static_cast<int>(hole.radius - 10.0f)), Vector2{ GetScreenWidth() / 2 - 80.0f, static_cast<float>(GetScreenHeight() / 2.0f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+			}
+
+			float exitLength = MeasureTextEx(font, "Exit", static_cast<float>(font.baseSize), 0).x;
+
+			DrawTextPro(font, "Exit", Vector2{ GetScreenWidth() / 2 - exitLength / 2, static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 0, 0 }, 0, static_cast<float>(font.baseSize), 0, BLACK);
+
+		}
 	}
 }
