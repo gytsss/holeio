@@ -22,7 +22,7 @@ namespace tob
 		Texture2D texture;
 	};
 
-	void createObject(Object& object, float requiredRad, Texture2D texture);
+	
 	void drawObject(Object object);
 	void drawObjects();
 	void createAllObjects(int& currentObjects, Texture2D bonefire, Texture2D palmtree, Texture2D tree);

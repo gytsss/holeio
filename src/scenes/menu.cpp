@@ -2,6 +2,12 @@
 
 namespace tob
 {
+
+	static void drawDifficultySelector(Font font, float& timer, Texture2D background, Scene& currentScene);
+	static void difficultySelectorCollisions(float& easyRotation, float& mediumRotation, float& hardRotation, float& timer, Scene& currentScene);
+
+
+
 	void drawMenu(Font font, Texture2D background, Scene& currentScene)
 	{
 		float titleLength = MeasureTextEx(font, "Hole.io", static_cast<float>(font.baseSize), 20).x;

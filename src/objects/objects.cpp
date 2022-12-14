@@ -3,6 +3,7 @@
 
 namespace tob
 {
+	static void createObject(Object& object, float requiredRad, Texture2D texture);
 
 	Object bonefires[maxBonefires];
 	Object palmtrees[maxPalmtrees];
