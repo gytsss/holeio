@@ -26,6 +26,7 @@
     <ClCompile Include="src\objects\objects.cpp" />
     <ClCompile Include="src\scenes\credits.cpp" />
     <ClCompile Include="src\scenes\game.cpp" />
+    <ClCompile Include="src\scenes\gameplay.cpp" />
     <ClCompile Include="src\scenes\menu.cpp" />
     <ClCompile Include="src\scenes\options.cpp" />
   </ItemGroup>
@@ -36,6 +37,7 @@
     <ClInclude Include="src\objects\objects.h" />
     <ClInclude Include="src\scenes\credits.h" />
     <ClInclude Include="src\scenes\game.h" />
+    <ClInclude Include="src\scenes\gameplay.h" />
     <ClInclude Include="src\scenes\menu.h" />
     <ClInclude Include="src\scenes\options.h" />
   </ItemGroup>

@@ -46,6 +46,9 @@
     <ClCompile Include="src\objects\cursor.cpp">
       <Filter>objects</Filter>
     </ClCompile>
+    <ClCompile Include="src\scenes\gameplay.cpp">
+      <Filter>scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\objects\button.h">
@@ -70,6 +73,9 @@
       <Filter>objects</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\options.h">
+      <Filter>scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\gameplay.h">
       <Filter>scenes</Filter>
     </ClInclude>
   </ItemGroup>
