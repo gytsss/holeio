@@ -20,13 +20,13 @@ namespace tob
 		DrawTextPro(font, "Back", Vector2{ 10, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 0, 0 }, rotation, static_cast<float>(font.baseSize), 0, BLACK);
 
 
-		DrawRectangle(150, 500, 40, 40, RED);
-		DrawRectangle(300, 500, 40, 40, BLUE);
-		DrawRectangle(450, 500, 40, 40, PURPLE);
-		DrawRectangle(600, 500, 40, 40, GREEN);
-		DrawRectangle(750, 500, 40, 40, WHITE);
-		DrawRectangle(900, 500, 40, 40, ORANGE);
-		DrawRectangle(1050, 500, 40, 40, SKYBLUE);
+		DrawRectangle(150, 500, boxSize, boxSize, RED);
+		DrawRectangle(300, 500, boxSize, boxSize, BLUE);
+		DrawRectangle(450, 500, boxSize, boxSize, PURPLE);
+		DrawRectangle(600, 500, boxSize, boxSize, GREEN);
+		DrawRectangle(750, 500, boxSize, boxSize, WHITE);
+		DrawRectangle(900, 500, boxSize, boxSize, ORANGE);
+		DrawRectangle(1050, 500, boxSize, boxSize, SKYBLUE);
 
 	}
 
