@@ -11,7 +11,7 @@ namespace tob
 
 		createButton(allAssets, Vector2{ static_cast<float>(GetScreenWidth() / 2),static_cast<float>(GetScreenHeight() / 3.0f) }, Vector2{ 450, 40 }, "Click here to see all the assets");
 		createButton(itch, Vector2{ static_cast<float>(GetScreenWidth() / 2), static_cast<float>(GetScreenHeight() / 1.70f) }, Vector2{ 400, 40 }, "Click here to see my itch.io");
-		createButton(back, Vector2{ 0.0f, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 80,40 }, "Back");
+		createButton(back, Vector2{ 50.0f, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 80,40 }, "Back");
 
 		float rotation = 0;
 

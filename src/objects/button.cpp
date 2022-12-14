@@ -8,6 +8,7 @@ namespace tob
 		button.pos = pos;
 		button.size = size;
 		button.text = text;
+		button.isPressed = false;
 	}
 
 	void drawButton(Button button, Font font)
@@ -20,7 +21,7 @@ namespace tob
 
 	bool checkCollisionMouseButton(Button button)
 	{
-		if (CheckCollisionPointRec(GetMousePosition(), Rectangle{ button.pos.x, button.pos.y, button.size.x, button.size.y })
+		if (CheckCollisionPointRec(GetMousePosition(), Rectangle{ button.pos.x, button.pos.y, button.size.x, button.size.y }))
 		{
 			return true;
 		}

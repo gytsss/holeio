@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\objects\button.cpp" />
+    <ClCompile Include="src\objects\cursor.cpp" />
     <ClCompile Include="src\objects\hole.cpp" />
     <ClCompile Include="src\objects\objects.cpp" />
     <ClCompile Include="src\scenes\credits.cpp" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\objects\button.h" />
+    <ClInclude Include="src\objects\cursor.h" />
     <ClInclude Include="src\objects\hole.h" />
     <ClInclude Include="src\objects\objects.h" />
     <ClInclude Include="src\scenes\credits.h" />

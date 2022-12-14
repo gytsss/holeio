@@ -7,7 +7,7 @@ namespace tob
 	{
 		Button back;
 
-		createButton(back, Vector2{ 0.0f, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 80,40 }, "Back");
+		createButton(back, Vector2{ 50.0f, static_cast<float>(GetScreenHeight() - 50) }, Vector2{ 80,40 }, "Back");
 
 		float skinLength = MeasureTextEx(font, "Choose your skin:", static_cast<float>(font.baseSize), 0).x;
 		float rotation = 0;

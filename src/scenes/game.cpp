@@ -5,6 +5,7 @@
 #include "credits.h"
 #include "options.h"
 #include "menu.h"
+#include "objects/cursor.h"
 
 namespace tob
 {
@@ -15,7 +16,6 @@ namespace tob
 
 	static void drawGame(Texture2D background, Font font, float timer, Texture2D pause);
 	static void drawPause(Font font, bool& pause);
-	static void drawCursor(Texture2D cursor);
 	static void drawWinOrLoseScreen(bool win, bool lose, bool& pause, Font font);
 
 	static void pauseCollisions(bool& pause);
@@ -233,12 +233,6 @@ namespace tob
 			pause = false;
 			currentScene = Menu;
 		}
-
-	}
-
-	void drawCursor(Texture2D cursor)
-	{
-		DrawTexture(cursor, static_cast<int>(GetMousePosition().x - 15), static_cast<int>(GetMousePosition().y - 15), WHITE);
 
 	}
 
